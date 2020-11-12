@@ -14,7 +14,7 @@
 	],
 	"require" : {
 		"php" : ">=7.0.0",
-		"technicalguru/i18n": "dev-main-dev"
+		"technicalguru/i18n": "^1"
 	},
 	"autoload" : {
 		"psr-4" : {
