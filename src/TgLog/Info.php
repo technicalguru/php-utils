@@ -4,6 +4,7 @@ namespace TgLog;
 
 /**
  * An info message for the log.
+ * <p>This kind of objects are mainly used for later display to users.</p>
  */
 class Info extends Message {
 

@@ -4,6 +4,7 @@ namespace TgLog;
 
 /**
  * A log message.
+ * <p>This kind of objects are mainly used for later display to users.</p>
  */
 class Message {
 
