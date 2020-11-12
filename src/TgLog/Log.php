@@ -12,6 +12,12 @@ namespace TgLog;
  */
 class Log {
     
+    public static const NONE  = 'none';
+    public static const DEBUG = 'debug';
+    public static const INFO  = 'info';
+    public static const WARN  = 'warn';
+    public static const ERROR = 'error';
+    
     /** The available log priorities */
     protected static $logPriorities;
     /** The log level to issue in error_log */
@@ -29,7 +35,7 @@ class Log {
 	 */
     public static function instance() {
 		if (self::$logLevel == null) {
-			self::$logLevel == 'info';
+			self::$logLevel == INFO;
 		}
 		if (self::$instance == null) {
 			self::$instance = new Log();
@@ -103,7 +109,7 @@ class Log {
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
 	 */
 	public static function debug($s, $o = null) {
-		self::instance()->log('debug', $s, $o);
+		self::instance()->log(DEBUG, $s, $o);
 	}
 
 	/**
@@ -112,7 +118,7 @@ class Log {
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
 	 */
 	public static function info($s, $o = null) {
-		self::instance()->log('info', $s, $o);
+		self::instance()->log(INFO, $s, $o);
 	}
 
 	/**
@@ -121,7 +127,7 @@ class Log {
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
 	 */
 	public static function warn($s, $o = null) {
-		self::instance()->log('warn', $s, $o);
+		self::instance()->log(WARN, $s, $o);
 	}
 
 	/**
@@ -130,7 +136,7 @@ class Log {
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
 	 */
 	public static function error($s, $o = null) {
-		self::instance()->log('error', $s, $o);
+		self::instance()->log(ERROR, $s, $o);
 	}
 
 	/**
@@ -138,7 +144,7 @@ class Log {
 	 * @param string $excludeFile - the file to be excluded (optional).
 	 */
 	public static function debugStackTrace($excludeFile = NULL) {
-		self::instance()->logStackTrace('debug', $excludeFile);
+		self::instance()->logStackTrace(DEBUG, $excludeFile);
 	}
 
 	/**
@@ -146,7 +152,7 @@ class Log {
 	 * @param string $excludeFile - the file to be excluded (optional).
 	 */
 	public static function infoStackTrace($excludeFile = NULL) {
-		self::instance()->logStackTrace('info', $excludeFile);
+		self::instance()->logStackTrace(INFO, $excludeFile);
 	}
 
 	/**
@@ -154,7 +160,7 @@ class Log {
 	 * @param string $excludeFile - the file to be excluded (optional).
 	 */
 	public static function warnStackTrace($excludeFile = NULL) {
-		self::instance()->logStackTrace('warn', $excludeFile);
+		self::instance()->logStackTrace(WARN, $excludeFile);
 	}
 
 	/**
@@ -162,7 +168,7 @@ class Log {
 	 * @param string $excludeFile - the file to be excluded (optional).
 	 */
 	public static function errorStackTrace($excludeFile = NULL) {
-		self::instance()->logStackTrace('error', $excludeFile);
+		self::instance()->logStackTrace(ERROR, $excludeFile);
 	}
 
 	/**
@@ -210,7 +216,7 @@ class Log {
 	 */
 	protected static function isLogLevelIncluded($sev) {
 		if (self::$logPriorities == null) {
-			self::$logPriorities = array('none', 'debug', 'info', 'warning', 'error');
+			self::$logPriorities = array(NONE, DEBUG, INFO, WARN, ERROR);
 		}
 		$logIndex = array_search(self::$logLevel, self::$logPriorities);
 		$sevIndex = array_search($sev, self::$logPriorities);
