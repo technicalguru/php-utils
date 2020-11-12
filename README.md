@@ -78,7 +78,7 @@ Inspect the [source code](https://github.com/technicalguru/php-utils/blob/src/Tg
 Logging is very simple. Set your log level (if not INFO) and start logging:
 
 ```
-use TgLog::Log;
+use TgLog\Log;
 
 // Set the log level
 Log::setLogLevel(Log::ERROR);
@@ -99,7 +99,7 @@ Log::error('We have some problem here:', $object);
 The Log can also help when you need to debug something:
 
 ```
-use TgLog::Log;
+use TgLog\Log;
 
 // Get the stacktrace
 $stacktrace = Log::getStackTrace(__FILE__);
@@ -113,7 +113,7 @@ can easily use the function without this argument to have the current file inclu
 
 ```
 $stacktrace = Log::getStackTrace();
-Log::infoStackTrace(__FILE__);
+Log::infoStackTrace();
 ```
 
 ## User Notifications
@@ -123,8 +123,8 @@ be displayed in another script, another HTTP call or even just later. The follow
 will remember the message across multiple call within a session.
 
 ```
-use TgLog::Log;
-use TgLog::Success;
+use TgLog\Log;
+use TgLog\Success;
 
 Log::register(new Success('Your data was saved successfully.));
 ```
@@ -135,8 +135,8 @@ the error log when it's an instance of `Debug`, `Error`, `Warning` or `Info`.
 In another call or script you can retrieve your messages again to display:
 
 ```
-use TgLog::Log;
-use TgLog::Success;
+use TgLog\Log;
+use TgLog\Success;
 
 foreach (Log::get() AS $message) {
 	switch ($message->getType()) {
