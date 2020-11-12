@@ -81,7 +81,7 @@ Logging is very simple. Set your log level (if not INFO) and start logging:
 use TgLog::Log;
 
 // Set the log level
-Log::setLogLevel(Log:ERROR);
+Log::setLogLevel(Log::ERROR);
 
 // Simple line
 Log::error('A simple error message');
