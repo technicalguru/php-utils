@@ -150,7 +150,7 @@ foreach (Log::get() AS $message) {
 }
 
 // Finally, clean all messages
-Log::clear();
+Log::clean();
 ```
 
 ## Other Utils
