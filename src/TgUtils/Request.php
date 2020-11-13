@@ -228,7 +228,7 @@ class Request {
 	 * @param string $key - the parameter name.
 	 * @param mixed $default - the default value when not found (optional, default is NULL)
 	 * @param boolean $getPrecedes - TRUE when GET parameter shall be returned even when POST parameter is given. (optional, default is TRUE).
-	 * @return the parameter value or its default.
+	 * @return string the parameter value or its default.
 	 */
 	public function getParam($key, $default = NULL, $getPrecedes = true) {
 		$rc = $getPrecedes ? $this->getGetParam($key) : $this->getPostParam($key);
