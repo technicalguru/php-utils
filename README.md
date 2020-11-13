@@ -153,6 +153,12 @@ foreach (Log::get() AS $message) {
 Log::clean();
 ```
 
+## Authentication Helper
+A simple authentication helper interface along with a default implementation is provided:
+
+* [TgUtils\Auth\CredentialsProvider](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Auth/CredentialsProvider.php) - Interface to provide username and password to other objects
+* [TgUtils\Auth\DefaultCredentialsProvider](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Auth/DefaultCredentialsProvider.php) - Simple default implementation of the interface
+
 ## Other Utils
 There are some daily tasks that need to be done in applications. The `Utils` class addresses a few of them:
 
