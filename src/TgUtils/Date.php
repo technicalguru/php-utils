@@ -8,7 +8,9 @@
 
 namespace TgUtils;
 
-\TgI18n\I18N::addI18nFile(__DIR__.'/../date_i18n.php', FALSE);
+use \TgI18n\I18N;
+
+I18N::addI18nFile(__DIR__.'/../date_i18n.php', FALSE);
 
 /**
  * Date is a class that stores a date and provides logic to manipulate
@@ -60,7 +62,7 @@ class Date extends \DateTime {
 	/**
 	 * The DateTimeZone object for usage in rending dates as strings.
 	 *
-	 * @var    DateTimeZone
+	 * @var    \DateTimeZone
 	 */
 	protected $tz;
 
@@ -349,7 +351,7 @@ class Date extends \DateTime {
 	/**
 	 * Method to wrap the setTimezone() function and set the internal time zone object.
 	 *
-	 * @param   DateTimeZone  $tz  The new DateTimeZone object.
+	 * @param   \DateTimeZone  $tz  The new DateTimeZone object.
 	 *
 	 * @return  Date
 	 *

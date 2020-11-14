@@ -2,7 +2,9 @@
 
 namespace TgUtils;
 
-\TgI18n\I18N::addI18nFile(__DIR__ . '/../utils_i18n.php', FALSE);
+use \TgI18n\I18N;
+
+I18N::addI18nFile(__DIR__ . '/../utils_i18n.php', FALSE);
 
 class Utils {
 
@@ -63,7 +65,7 @@ class Utils {
      * Generate a random string.
      * @param int $length - length of string to generated (optional, default is 10).
      * @param string $chars - allowed characters (optional, default is alphanumeric class [0-9A-Za-z]).
-     * @return a string with given length containing allowed characters only.
+     * @return string a string with given length containing allowed characters only.
      */
     public static function generateRandomString($length = 10, $chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ') {
         $charsLen = strlen($chars);
@@ -113,7 +115,7 @@ class Utils {
 	 * @return string the formatted price in localized manner.
 	 */
     public static function formatPrice($value, $currency, $language = null, $spaceChar = '&nbsp;') {
-		return number_format(floatval($value), 2, I18N::_('decimal_point', $language), \I18N::_('thousand_sep', $language)).$spaceChar.$currency;
+		return number_format(floatval($value), 2, I18N::_('decimal_point', $language), I18N::_('thousand_sep', $language)).$spaceChar.$currency;
 	}
 	
 }
