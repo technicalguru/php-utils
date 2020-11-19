@@ -80,8 +80,13 @@ Logging is very simple. Set your log level (if not INFO) and start logging:
 ```
 use TgLog\Log;
 
-// Set the log level
-Log::setLogLevel(Log::ERROR);
+// Set default settings before using the log:
+Log::setDefaultLogLevel(Log::ERROR);
+Log::setDefaultAppName('MyApplication');
+
+// Or just on the singleton logging instance
+Log::instance()->setLogLevel(Log::ERROR);
+Log::instance()->setAppName('MyAppName');
 
 // Simple line
 Log::error('A simple error message');
@@ -114,6 +119,16 @@ can easily use the function without this argument to have the current file inclu
 ```
 $stacktrace = Log::getStackTrace();
 Log::infoStackTrace();
+```
+
+Finally, you can create your special instances of a log for some modules and log from there, e.g.
+
+```
+$moduleLog = new Log(Log::ERROR, 'MyAppModule');
+
+$moduleLog->logInfo('Module started');
+$moduleLog->logError('Exception occurred:', $exception);
+
 ```
 
 ## User Notifications
