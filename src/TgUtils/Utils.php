@@ -2,10 +2,6 @@
 
 namespace TgUtils;
 
-use \TgI18n\I18N;
-
-I18N::addI18nFile(__DIR__ . '/../utils_i18n.php', FALSE);
-
 class Utils {
 
     /**
@@ -105,17 +101,4 @@ class Utils {
 		}
 		return $rc;
 	}
-	
-	/**
-	 * Format a price value using localization.
-	 * @param float $value - the value
-	 * @param string $currency - the currency
-	 * @param string $language - the language code (optional, default language of I18N class).
-	 * @param string $spaceChar - the space character to be used between value and currency (optional, default is HTML non-breaking space).
-	 * @return string the formatted price in localized manner.
-	 */
-    public static function formatPrice($value, $currency, $language = null, $spaceChar = '&nbsp;') {
-		return number_format(floatval($value), 2, I18N::_('decimal_point', $language), I18N::_('thousand_sep', $language)).$spaceChar.$currency;
-	}
-	
 }

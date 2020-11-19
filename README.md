@@ -9,6 +9,7 @@ This is a collection of useful classes and functions for every day PHP life. It 
 * Obfuscating sensitive information to protect data against spambots
 * Slugifying strings for usage in URLs
 * Generating random strings
+* Formatting prices and units
 
 These classes are no rocket science, just simple helpers that prevent from wiriting the
 same code in various flavours over and over again.
@@ -226,6 +227,8 @@ There are some daily tasks that need to be done in applications. The `Utils` cla
 
 ```
 use TgUtils\Utils;
+use TgUtils\FormatUtils;
+use TgUtils\Slugify;
 
 // create a random string
 $myId = Utils::generateRandomString(20);
@@ -253,6 +256,12 @@ $masked = Utils::anonymize($aPhoneNumber);
 
 // Slugify a string
 $slug = Slugify::slugify('A text that turn into an URL');
+
+// Format a price
+$priceString = FormatUtils::formatPrice(3000.643, 'EUR');
+
+// Format a file size
+$fileSize = FormatUtils::formatUnit(3000643, 'B');
 ```
 
 Inspect the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Utils.php) to find more about the methods available.
