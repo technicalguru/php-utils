@@ -6,7 +6,8 @@ This is a collection of useful classes and functions for every day PHP life. It 
 * Logging to error_log with different levels
 * Notification to users across various requests within a session
 * Extracting information from the current HTTP request
-* Obfuscate sensitive information to protect data against spambots
+* Obfuscating sensitive information to protect data against spambots
+* Slugifying strings for usage in URLs
 * Generating random strings
 
 These classes are no rocket science, just simple helpers that prevent from wiriting the
@@ -249,6 +250,9 @@ $allNames = Utils::extractAttributeFromList($objectList, 'name');
 
 // Mask a sensitive string
 $masked = Utils::anonymize($aPhoneNumber);
+
+// Slugify a string
+$slug = Slugify::slugify('A text that turn into an URL');
 ```
 
 Inspect the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Utils.php) to find more about the methods available.
