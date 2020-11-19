@@ -6,6 +6,7 @@ This is a collection of useful classes and functions for every day PHP life. It 
 * Logging to error_log with different levels
 * Notification to users across various requests within a session
 * Extracting information from the current HTTP request
+* Obfuscate sensitive information to protect data against spambots
 * Generating random strings
 
 These classes are no rocket science, just simple helpers that prevent from wiriting the
@@ -173,6 +174,51 @@ A simple authentication helper interface along with a default implementation is 
 
 * [TgUtils\Auth\CredentialsProvider](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Auth/CredentialsProvider.php) - Interface to provide username and password to other objects
 * [TgUtils\Auth\DefaultCredentialsProvider](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Auth/DefaultCredentialsProvider.php) - Simple default implementation of the interface
+
+## Sensitive Data Obfuscation
+
+Publishing sensitive data such as e-mail addresses and phone numbers is dangerous nowadays as spammers
+grab such information automatically from websites. The utils package provides a javascript-based way
+to obfuscate this information on websites. Its' idea is based on the rot13 obfuscation method but uses a
+random character mapping instead of a fixed rotation. This idea was chosen because rot13 seems to be a kind of standard
+in obfuscation and spammers might already be able to read them.
+
+It shall be noted that it is still not impossible to read the information even when obfuscated. But it requires
+a bit more sophisticated effort (Javascript execution) to gain the sensitive information.
+
+**Idea:** The text to be obfuscated is replaced - char by char - by other characters from a map. This map is
+generated uniquely for this special obfuscation instance. Other obfuscations on the same page will use different
+maps. The HTML source displays only: `[javascript protected]`. However, a special javascript will run after
+the page loaded and replace exactly this text with the real content.
+
+Two obfuscation methods exists: a simple text obfuscation and an e-mail obfuscation which also creates a mailto: link
+that the user can click.
+
+Here is how you use it:
+
+```
+user \TgUtils\Obfuscation;
+
+/*** Just create everything and put it in your HTML page **/
+$htmlSource = Obfuscation::obfuscateText('+49 555 0123456');
+$emailLink  = Obfuscation::obfuscateEmail('john.doe@example.com');
+
+/*************************** OR ***************************/
+// Use your own tag ID 
+$id         = Obfuscation::generateObfuscationId();
+
+// Use this ID to get the bot-resistent HTML source
+$htmlSource = Obfuscation::getObfuscatedHtmlSpan($id);
+
+// And get the javascript
+$textJavascript   = Obfuscation::obfuscateText('+49 555 0123456', $id);
+$emailJavascript  = Obfuscation::obfuscateEmail('john.doe@example.com', $id);
+
+```
+
+Please notice that not all characters are supported in the default character map. It covers mainly
+e-mail addresses and phone numbers. However, you can pass your own character set to the obfuscate methods
+as third argument. Please consult the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Obfuscation.php) for more details.
 
 ## Other Utils
 There are some daily tasks that need to be done in applications. The `Utils` class addresses a few of them:
