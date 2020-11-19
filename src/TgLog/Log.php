@@ -21,34 +21,76 @@ class Log {
     /** The available log priorities */
     protected static $logPriorities;
     /** The log level to issue in error_log */
-	protected static $logLevel;
+	protected static $defaultLogLevel;
+	/** The name of the application to prefix log entries */
+	protected static $defaultAppName;
 	
 	/** The single instance of the log */
 	public    static $instance;
 	
 	/** All log messages that were issued */
 	public    $messages;
+	/** The log level of the instance */
+	protected $logLevel;
+	/** The app name to prefix lof entries with */
+	protected $appName;
 	
 	/**
 	 * Returns the single instance.
 	 * @return Log - single Log instance 
 	 */
     public static function instance() {
-		if (self::$logLevel == null) {
-			self::$logLevel == self::INFO;
+		if (self::$defaultLogLevel == null) {
+			self::$defaultLogLevel = self::INFO;
 		}
 		if (self::$instance == null) {
-			self::$instance = new Log();
+			self::$instance = new Log(self::$defaultLogLevel, self::$defaultAppName);
 		}
 		return self::$instance;
 	}
 	
 	/**
+	 * Returns the log level of this instance.
+	 * @return string the current log level
+	 */
+	public function getLogLevel() {
+	    return $this->logLevel;
+	}
+	
+	/**
+	 * Sets the log level of this instance.
+	 * @param string $level - the new log level
+	 */
+	public function setLogLevel($level) {
+	    $this->logLevel = $level;
+	}
+	
+	/**
+	 * Returns the prefix for log entries.
+	 * @return string the current prefix
+	 */
+	public function getAppName() {
+	    return $this->appName;
+	}
+	
+	/**
+	 * Sets the prefix that log entries shall be given.
+	 * @param string $appName - the new prefix
+	 */
+	public function setAppName($appName) {
+	    $this->appName = $appName;
+	}
+	
+	/**
 	 * Public constructor.
+	 * @param string $logLevel - the log level for this instance (optional, default is Log::INFO)
+	 * @param string $appName  - the prefix for the log entry (optional)
 	 * <p>Usually you don't need to instantiate it yourself but use the single instance.</p> 
 	 */
-    public function __construct() {
+    public function __construct($logLevel = self::INFO, $appName = NULL) {
 		$this->messages = array();
+		$this->logLevel = $logLevel;
+		$this->appName  = $appName != NULL ? $appName : self::$defaultAppName;
 	}
 
 	/**
@@ -67,7 +109,8 @@ class Log {
 			}
 		}
 		$this->messages[$sev][] = $s;
-		if (self::isLogLevelIncluded($sev)) error_log('[WebApp - '.strtoupper($sev).'] '.$s);
+		$prefix = $this->getAppName() != NULL ? '['.$this->getAppName().']' : '';
+		if ($this->isLogLevelIncluded($sev)) error_log($prefix.'['.strtoupper($sev).'] '.$s);
 	}
 
 	/**
@@ -78,7 +121,7 @@ class Log {
 	public function logStackTrace($sev, $excludeFile = NULL) {
 		$trace = $this->getStackTrace($excludeFile);
 		$this->log($sev, 'Stacktrace:');
-		foreach ($trace AS $idx => $line) {
+		foreach ($trace AS $line) {
 			$this->log($sev, '   '.$line);
 		}
 	}
@@ -109,7 +152,16 @@ class Log {
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
 	 */
 	public static function debug($s, $o = null) {
-		self::instance()->log(self::DEBUG, $s, $o);
+		self::instance()->logDebug($s, $o);
+	}
+
+	/**
+	 * Debug message into log.
+	 * @param string $s - the message
+	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
+	 */
+	public function logDebug($s, $o = null) {
+		$this->log(self::DEBUG, $s, $o);
 	}
 
 	/**
@@ -118,7 +170,16 @@ class Log {
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
 	 */
 	public static function info($s, $o = null) {
-		self::instance()->log(self::INFO, $s, $o);
+		self::instance()->logInfo($s, $o);
+	}
+
+	/**
+	 * Info message into log.
+	 * @param string $s - the message
+	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
+	 */
+	public function logInfo($s, $o = null) {
+		$this->log(self::INFO, $s, $o);
 	}
 
 	/**
@@ -127,7 +188,16 @@ class Log {
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
 	 */
 	public static function warn($s, $o = null) {
-		self::instance()->log(self::WARN, $s, $o);
+		self::instance()->logWarn($s, $o);
+	}
+
+	/**
+	 * Warning message into log.
+	 * @param string $s - the message
+	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
+	 */
+	public function logWarn($s, $o = null) {
+		$this->log(self::WARN, $s, $o);
 	}
 
 	/**
@@ -136,7 +206,16 @@ class Log {
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
 	 */
 	public static function error($s, $o = null) {
-		self::instance()->log(self::ERROR, $s, $o);
+		self::instance()->logError($s, $o);
+	}
+
+	/**
+	 * Error message into log.
+	 * @param string $s - the message
+	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
+	 */
+	public function logError($s, $o = null) {
+		$this->log(self::ERROR, $s, $o);
 	}
 
 	/**
@@ -175,8 +254,16 @@ class Log {
 	 * Set the global log level.
 	 * @param $sev - shall be debug, info, warn, error or none.
 	 */
-	public static function setLogLevel($sev) {
-		self::$logLevel = $sev;
+	public static function setDefaultLogLevel($sev) {
+		self::$defaultLogLevel = $sev;
+	}
+	
+	/**
+	 * Set the global log entry prefix.
+	 * @param $appName - default prefix for log entries.
+	 */
+	public static function setDefaultAppName($appName) {
+		self::$defaultAppName = $appName;
 	}
 	
 	/**
@@ -214,11 +301,11 @@ class Log {
 	 * @param string $sev - the log level to check
 	 * @return TRUE when the current loglevel allows logging.
 	 */
-	protected static function isLogLevelIncluded($sev) {
+	protected function isLogLevelIncluded($sev) {
 		if (self::$logPriorities == null) {
 			self::$logPriorities = array(self::NONE, self::DEBUG, self::INFO, self::WARN, self::ERROR);
 		}
-		$logIndex = array_search(self::$logLevel, self::$logPriorities);
+		$logIndex = array_search($this->logLevel, self::$logPriorities);
 		$sevIndex = array_search($sev, self::$logPriorities);
 		return $logIndex <= $sevIndex;
 	}

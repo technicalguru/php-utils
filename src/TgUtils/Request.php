@@ -8,6 +8,8 @@ use TgLog\Error;
 /** Holds information about an HTTP request */
 class Request {
 
+    public const DEFAULT_REQUEST_URI = 'https://www.example.com/';
+    
 	/** the default instance from globals */
 	protected static $request;
 
@@ -39,8 +41,12 @@ class Request {
 
 	/** Constructor */
 	public function __construct() {
-		$this->uri        = $_SERVER['REQUEST_URI'];
-		$uri_parts        = explode('?', $this->uri, 2);
+        if (isset($_SERVER['REQUEST_URI'])) {
+	        $this->uri    = $_SERVER['REQUEST_URI'];
+        } else {
+	        $this->uri    = Request::DEFAULT_REQUEST_URI;
+        }
+	    $uri_parts        = explode('?', $this->uri, 2);
 		$this->path       = $uri_parts[0];
 		$this->params     = count($uri_parts) > 1 ? $uri_parts[1] : '';
 		$this->langCode   = 'en';

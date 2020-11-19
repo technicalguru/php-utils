@@ -6,7 +6,10 @@ This is a collection of useful classes and functions for every day PHP life. It 
 * Logging to error_log with different levels
 * Notification to users across various requests within a session
 * Extracting information from the current HTTP request
+* Obfuscating sensitive information to protect data against spambots
+* Slugifying strings for usage in URLs
 * Generating random strings
+* Formatting prices and units
 
 These classes are no rocket science, just simple helpers that prevent from wiriting the
 same code in various flavours over and over again.
@@ -80,8 +83,13 @@ Logging is very simple. Set your log level (if not INFO) and start logging:
 ```
 use TgLog\Log;
 
-// Set the log level
-Log::setLogLevel(Log::ERROR);
+// Set default settings before using the log:
+Log::setDefaultLogLevel(Log::ERROR);
+Log::setDefaultAppName('MyApplication');
+
+// Or just on the singleton logging instance
+Log::instance()->setLogLevel(Log::ERROR);
+Log::instance()->setAppName('MyAppName');
 
 // Simple line
 Log::error('A simple error message');
@@ -114,6 +122,16 @@ can easily use the function without this argument to have the current file inclu
 ```
 $stacktrace = Log::getStackTrace();
 Log::infoStackTrace();
+```
+
+Finally, you can create your special instances of a log for some modules and log from there, e.g.
+
+```
+$moduleLog = new Log(Log::ERROR, 'MyAppModule');
+
+$moduleLog->logInfo('Module started');
+$moduleLog->logError('Exception occurred:', $exception);
+
 ```
 
 ## User Notifications
@@ -159,11 +177,58 @@ A simple authentication helper interface along with a default implementation is 
 * [TgUtils\Auth\CredentialsProvider](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Auth/CredentialsProvider.php) - Interface to provide username and password to other objects
 * [TgUtils\Auth\DefaultCredentialsProvider](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Auth/DefaultCredentialsProvider.php) - Simple default implementation of the interface
 
+## Sensitive Data Obfuscation
+
+Publishing sensitive data such as e-mail addresses and phone numbers is dangerous nowadays as spammers
+grab such information automatically from websites. The utils package provides a javascript-based way
+to obfuscate this information on websites. Its' idea is based on the rot13 obfuscation method but uses a
+random character mapping instead of a fixed rotation. This idea was chosen because rot13 seems to be a kind of standard
+in obfuscation and spammers might already be able to read them.
+
+It shall be noted that it is still not impossible to read the information even when obfuscated. But it requires
+a bit more sophisticated effort (Javascript execution) to gain the sensitive information.
+
+**Idea:** The text to be obfuscated is replaced - char by char - by other characters from a map. This map is
+generated uniquely for this special obfuscation instance. Other obfuscations on the same page will use different
+maps. The HTML source displays only: `[javascript protected]`. However, a special javascript will run after
+the page loaded and replace exactly this text with the real content.
+
+Two obfuscation methods exists: a simple text obfuscation and an e-mail obfuscation which also creates a mailto: link
+that the user can click.
+
+Here is how you use it:
+
+```
+user \TgUtils\Obfuscation;
+
+/*** Just create everything and put it in your HTML page **/
+$htmlSource = Obfuscation::obfuscateText('+49 555 0123456');
+$emailLink  = Obfuscation::obfuscateEmail('john.doe@example.com');
+
+/*************************** OR ***************************/
+// Use your own tag ID 
+$id         = Obfuscation::generateObfuscationId();
+
+// Use this ID to get the bot-resistent HTML source
+$htmlSource = Obfuscation::getObfuscatedHtmlSpan($id);
+
+// And get the javascript
+$textJavascript   = Obfuscation::obfuscateText('+49 555 0123456', $id);
+$emailJavascript  = Obfuscation::obfuscateEmail('john.doe@example.com', $id);
+
+```
+
+Please notice that not all characters are supported in the default character map. It covers mainly
+e-mail addresses and phone numbers. However, you can pass your own character set to the obfuscate methods
+as third argument. Please consult the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Obfuscation.php) for more details.
+
 ## Other Utils
 There are some daily tasks that need to be done in applications. The `Utils` class addresses a few of them:
 
 ```
 use TgUtils\Utils;
+use TgUtils\FormatUtils;
+use TgUtils\Slugify;
 
 // create a random string
 $myId = Utils::generateRandomString(20);
@@ -188,6 +253,15 @@ $allNames = Utils::extractAttributeFromList($objectList, 'name');
 
 // Mask a sensitive string
 $masked = Utils::anonymize($aPhoneNumber);
+
+// Slugify a string
+$slug = Slugify::slugify('A text that turn into an URL');
+
+// Format a price
+$priceString = FormatUtils::formatPrice(3000.643, 'EUR');
+
+// Format a file size
+$fileSize = FormatUtils::formatUnit(3000643, 'B');
 ```
 
 Inspect the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Utils.php) to find more about the methods available.
