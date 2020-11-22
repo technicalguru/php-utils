@@ -250,5 +250,50 @@ class Request {
 	public function getElapsedTime() {
 		return time() - $this->startTime;
 	}
+	
+	/**
+	 * Returns the full URL of the web root.
+	 * @return string the URL to the root dir.
+	 */
+	public function getWebRootUrl() {
+		$protocol = $this->getProtocol();
+		$host     = $this->getHost();
+		return $protocol.'://'.$host.self::getWebRoot();
+	}
+	
+	/**
+	 * Returns the document root - this is the real path name of the web root.
+	 * @return string the document root or context document root if available.
+	 */
+	public static function getDocumentRoot() {
+	    if (isset($_SERVER['CONTEXT_DOCUMENT_ROOT'])) {
+	        return $_SERVER['CONTEXT_DOCUMENT_ROOT'];
+	    }
+	    return $_SERVER['DOCUMENT_ROOT'];
+	}
+	
+	/**
+	 * Returns the web root - that is the web path where the current
+	 * script is rooted and usually the base path for an application.
+	 * <p>$_SERVER['PHP_SELF'] or $_SERVER['SCRIPT_NAME']</p> will
+	 *    be misleading as they would not tell the real document root.</p>
+	 * @return string the presumed web root.
+	 */
+	public static function getWebRoot($considerForwarding = TRUE) {
+		if ($considerForwarding) {
+			$rootDef = $_SERVER['HTTP_X_FORWARDED_ROOT'];
+			if ($rootDef) {
+				$arr = explode(',', $rootDef);
+				return $arr[1];
+			}
+		}
+		$docRoot = self::getDocumentRoot();
+		$fileDir = dirname($_SERVER['SCRIPT_FILENAME']);
+		$webRoot = substr($fileDir, strlen($docRoot));
+		if (isset($_SERVER['CONTEXT'])) {
+		    $webRoot = $_SERVER['CONTEXT'].$webRoot;
+		}
+		return $webRoot;
+	}
 }
 
