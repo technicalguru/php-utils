@@ -37,6 +37,15 @@ class Date extends \DateTime {
 	const MONTH_ABBR = "\x023\x03";
 	const MONTH_NAME = "\x024\x03";
 
+	/** Seconds per minute */
+	public const SECONDS_PER_MINUTE = 60;
+	/** Seconds per hour */
+	public const SECONDS_PER_HOUR   = 3600;
+	/** Seconds per day */
+	public const SECONDS_PER_DAY    = 86400;
+	/** Seconds per week */
+	public const SECONDS_PER_WEEK   = 604800;
+	
 	/**
 	 * The format string to be applied when using the __toString() magic method.
 	 *
