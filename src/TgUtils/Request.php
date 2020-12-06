@@ -44,8 +44,20 @@ class Request {
 	public $params;
 	/** The path parameters (GET params) */
 	public $getParams;
+	/** The (context) document root */
+	public $documentRoot;
+	/** The web root as seen by the user, usually '/' or an alias or mapped path from a proxy */
+	public $webRoot;
+	/** The web root as defined by the local web server */
+	public $localWebRoot;
+	/** The web root URI as it can be requested by the user */
+	public $webRootUri;
 	/** The epoch time in seconds when the request was created */
 	public $startTime;
+	/** Usually the document root */
+	public $appRoot;
+	/** relative path from docroot to the app root, usually empty */
+	public $relativeAppPath;
 
 	/** The body of the request (intentionally not public) */
 	protected $body;
@@ -79,6 +91,9 @@ class Request {
 		$this->webRoot      = $this->initWebRoot(TRUE);
 		$this->localWebRoot = $this->initWebRoot(FALSE);
 		$this->webRootUri   = $this->initWebRootUri();
+		$this->appRoot      = $this->documentRoot;
+		$this->relativeAppPath = '';
+
 		$this->startTime    = time();
 
 		// Will be deprecated
@@ -301,6 +316,20 @@ class Request {
 		$host     = $this->host;
 		return $protocol.'://'.$host.$this->webRoot;
 	}
-	
+
+	/**
+	 * Initializes the appRoot and relativeAppPath according to the root of the app.
+	 * The appRoot can differ from document root as it can be installed in a subdir.
+	 * @param string $appRoot - the application root directory (absolute path)
+	 */
+	public function setAppRoot($appRoot) {	
+		$appRootLen = strlen($appRoot);
+		$docRootLen = strlen($this->documentRoot);
+		if (($docRootLen < $appRootLen) && (strpos($appRoot, $this->documentRoot) === 0)) {
+			$this->relativeAppPath = substr($appRoot, $docRootLen);
+		} else {
+			$this->relativeAppPath = '';
+		}
+	}
 }
 
