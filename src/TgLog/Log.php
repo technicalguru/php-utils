@@ -102,10 +102,10 @@ class Log {
 	protected function log($sev, $s, $o = null) {
 		if (!is_string($s)) $s = json_encode($s, JSON_PRETTY_PRINT);
 		if ($o != null) {
-			if ($o instanceof \Exception) {
-				$s .= get_class($o).' "'.$o->getCode().' - '.$o->getMessage()."\" at\n".$o->getTraceAsString();
+			if ($o instanceof \Throwable) {
+				$s .= ': '.get_class($o).' "'.$o->getCode().' - '.$o->getMessage()."\" at\n".$o->getTraceAsString();
 			} else {
-				$s .= json_encode($o, JSON_PRETTY_PRINT);
+				$s .= ': '.json_encode($o, JSON_PRETTY_PRINT);
 			}
 		}
 		$this->messages[$sev][] = $s;
