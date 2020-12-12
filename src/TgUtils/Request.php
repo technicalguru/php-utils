@@ -298,7 +298,9 @@ class Request {
 			$rootDef = $_SERVER['HTTP_X_FORWARDED_ROOT'];
 			if ($rootDef) {
 				$arr = explode(',', $rootDef);
-				return $arr[1];
+				$rc = $arr[1];
+				if ((strlen($rc) > 0) && (substr($rc, -1) == '/')) $rc = substr($rc, 0, strlen($rc)-1);
+				return $rc;
 			}
 		}
 		$docRoot = $this->documentRoot;
@@ -307,6 +309,7 @@ class Request {
 		if (isset($_SERVER['CONTEXT'])) {
 		    $webRoot = $_SERVER['CONTEXT'].$webRoot;
 		}
+		if ((strlen($webRoot) > 0) && (substr($webRoot, -1) == '/')) $webRoot = substr($rc, 0, strlen($webRoot)-1);
 		return $webRoot;
 	}
 
