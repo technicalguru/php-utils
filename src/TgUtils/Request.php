@@ -38,6 +38,8 @@ class Request {
 	public $uri;
 	/** The path of the request. Does not include parameters */
 	public $path;
+	/** The path of the original request (requested at proxy). Does not include parameters */
+	public $originalPath;
 	/** The path split in its elements */
 	public $pathElements;
 	/** The parameters as a string */
@@ -89,6 +91,7 @@ class Request {
 		$this->body         = NULL;
 		$this->documentRoot = $this->initDocumentRoot();
 		$this->webRoot      = $this->initWebRoot(TRUE);
+		$this->originalPath = $this->initOriginalPath();
 		$this->localWebRoot = $this->initWebRoot(FALSE);
 		$this->webRootUri   = $this->initWebRootUri();
 		$this->appRoot      = $this->documentRoot;
@@ -285,7 +288,24 @@ class Request {
 	    }
 	    return $_SERVER['DOCUMENT_ROOT'];
 	}
-	
+
+	/**
+	 * Returns the original path as request by the end user.
+	 * The path might be different from $this->path as
+	 * a webroot mapping might be involved.
+	 */
+	protected function initOriginalPath() {
+		$rc = $this->path;
+		$rootDef = $_SERVER['HTTP_X_FORWARDED_ROOT'];
+		if ($rootDef) {
+			$arr = explode(',', $rootDef);
+			if (strpos($rc, $arr[0]) === 0) {
+				$rc = $arr[1].substr($rc, strlen($arr[0]));
+			}
+		}
+		return $rc;
+	}
+
 	/**
 	 * Returns the web root - that is the web path where the current
 	 * script is rooted and usually the base path for an application.
