@@ -111,7 +111,10 @@ class Request {
 	protected function initHost() {
 		if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
 			$forwarded = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
-			return trim($forwarded[count($forwarded)-1]);
+			$last  = trim($forwarded[count($forwarded)-1]);
+			$first = trim($forwarded[0]);
+			if ($first != $this->httpHost) return $first;
+			if ($last  != $this->httpHost) return $last;
 		}
 		return $this->httpHost;
 	}
