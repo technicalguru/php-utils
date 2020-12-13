@@ -38,6 +38,8 @@ class Request {
 	public $uri;
 	/** The path of the request. Does not include parameters */
 	public $path;
+	/** The path of the original request (requested at proxy). Does not include parameters */
+	public $originalPath;
 	/** The path split in its elements */
 	public $pathElements;
 	/** The parameters as a string */
@@ -89,6 +91,7 @@ class Request {
 		$this->body         = NULL;
 		$this->documentRoot = $this->initDocumentRoot();
 		$this->webRoot      = $this->initWebRoot(TRUE);
+		$this->originalPath = $this->initOriginalPath();
 		$this->localWebRoot = $this->initWebRoot(FALSE);
 		$this->webRootUri   = $this->initWebRootUri();
 		$this->appRoot      = $this->documentRoot;
@@ -111,7 +114,10 @@ class Request {
 	protected function initHost() {
 		if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
 			$forwarded = explode(',', $_SERVER['HTTP_X_FORWARDED_HOST']);
-			return trim($forwarded[count($forwarded)-1]);
+			$last  = trim($forwarded[count($forwarded)-1]);
+			$first = trim($forwarded[0]);
+			if ($first != $this->httpHost) return $first;
+			if ($last  != $this->httpHost) return $last;
 		}
 		return $this->httpHost;
 	}
@@ -282,7 +288,24 @@ class Request {
 	    }
 	    return $_SERVER['DOCUMENT_ROOT'];
 	}
-	
+
+	/**
+	 * Returns the original path as request by the end user.
+	 * The path might be different from $this->path as
+	 * a webroot mapping might be involved.
+	 */
+	protected function initOriginalPath() {
+		$rc = $this->path;
+		$rootDef = $_SERVER['HTTP_X_FORWARDED_ROOT'];
+		if ($rootDef) {
+			$arr = explode(',', $rootDef);
+			if (strpos($rc, $arr[0]) === 0) {
+				$rc = $arr[1].substr($rc, strlen($arr[0]));
+			}
+		}
+		return $rc;
+	}
+
 	/**
 	 * Returns the web root - that is the web path where the current
 	 * script is rooted and usually the base path for an application.
@@ -295,7 +318,9 @@ class Request {
 			$rootDef = $_SERVER['HTTP_X_FORWARDED_ROOT'];
 			if ($rootDef) {
 				$arr = explode(',', $rootDef);
-				return $arr[1];
+				$rc = $arr[1];
+				if ((strlen($rc) > 0) && (substr($rc, -1) == '/')) $rc = substr($rc, 0, strlen($rc)-1);
+				return $rc;
 			}
 		}
 		$docRoot = $this->documentRoot;
@@ -304,6 +329,7 @@ class Request {
 		if (isset($_SERVER['CONTEXT'])) {
 		    $webRoot = $_SERVER['CONTEXT'].$webRoot;
 		}
+		if ((strlen($webRoot) > 0) && (substr($webRoot, -1) == '/')) $webRoot = substr($rc, 0, strlen($webRoot)-1);
 		return $webRoot;
 	}
 
