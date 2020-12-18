@@ -10,6 +10,7 @@ This is a collection of useful classes and functions for every day PHP life. It 
 * Slugifying strings for usage in URLs
 * Generating random strings
 * Formatting prices and units
+* Simple text templating
 
 These classes are no rocket science, just simple helpers that prevent from wiriting the
 same code in various flavours over and over again.
@@ -220,7 +221,45 @@ $emailJavascript  = Obfuscation::obfuscateEmail('john.doe@example.com', $id);
 
 Please notice that not all characters are supported in the default character map. It covers mainly
 e-mail addresses and phone numbers. However, you can pass your own character set to the obfuscate methods
-as third argument. Please consult the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Obfuscation.php) for more details.
+as third argument. Please consult the [source code](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Obfuscation.php) for more details.
+
+## Text Templating
+
+To ease the generation of dynamic texts, a template processor is provided. This processor can work on texts that contain variables in 
+curly brackets `{{variable-definition}}`. The processor knows objects, snippets and formatters.
+
+**Objects** are application objects that hold attributes that you want to be replaced. An object's attribute will be referenced in a template
+with `{{objectKey.attributeName}}`, e.g. `{{user.name}}`.
+
+**Snippets** are more complex replacements that will be inserted in your template. This is useful when you need the same complex
+text structure in multiple template generations, e.g. for a footer or a header text. Snippets are references in a template by
+their keys only: `{{snippetKey}}`. A snippet is implemented by the interface [Snippet](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Templating/Snippet.php).
+
+**Formatters** can be used to format an object's attribute. Formatters can take parameters to further customize the formatting. A good example
+is the [`DateFormatter`](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Templating/DateFormatter.php). The formatter
+is referenced with the object's attribute by `{{objectKey.attribute:formatterKey:param1:param2...}}`, e.g. `{{user.created_on:date:rfc822}}`.
+
+All three elements - objects, snippets and formatters - are given to the [Processor](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Templating/Processor.php) in its constructor:
+
+```
+$objects    = array('user'   => $myUser);
+$snippets   = array('header' => new HeaderSnippet(), 'footer' => $new FooterSnippet());
+$formatters = array('date' => new DateFormatter();
+$language   = 'en';
+$processor = new Processor($objects, $snippets, $formatters, $language);
+```
+
+The language is for information and can be used in snippets or formatters to select the right text.
+
+Finally you can process a template:
+
+```
+$template = '{{header}} Hello {{user.name}}! Your account was created on {{user.created_on:date:d/m/Y}}.{{footer}}';
+echo $processor->process($template);
+
+// Output is:
+// IMPORTANT MESSAGE! Hello John Doe! Your account was created on 02/03/2017. Best regards!
+```
 
 ## Other Utils
 There are some daily tasks that need to be done in applications. The `Utils` class addresses a few of them:
