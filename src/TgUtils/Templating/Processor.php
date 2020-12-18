@@ -70,6 +70,11 @@ class Processor {
 		$object = $parts[0];
 		if (count($parts) > 1) return $this->getAttribute($object, $parts[1]);
 		else {
+			// Is there a string object?
+			$object  = $this->getObject($object);
+			if (is_string($object)) return $object;
+
+			// Try a snippet
 			$snippet = $this->getSnippet($object);
 			if ($snippet != NULL) {
 				if (is_string($snippet)) return $snippet;
