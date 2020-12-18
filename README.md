@@ -45,7 +45,7 @@ It is possible to create an object yourself, but it is recommend to use the sing
 $request = \TgUtils\Request::getRequest();
 ```
 
-Inspect the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Request.php) to find out about the various methods available.
+Inspect the [source code](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Request.php) to find out about the various methods available.
 
 ## Date class
 
@@ -75,7 +75,7 @@ $iso8601       = $date->toISO8601();
 $someString    = $date->format('d.m.Y H:i:s');
 ```
 
-Inspect the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Date.php) to find out about the various methods available.
+Inspect the [source code](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Date.php) to find out about the various methods available.
 
 ## Logging
 
@@ -175,8 +175,8 @@ Log::clean();
 ## Authentication Helper
 A simple authentication helper interface along with a default implementation is provided:
 
-* [TgUtils\Auth\CredentialsProvider](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Auth/CredentialsProvider.php) - Interface to provide username and password to other objects
-* [TgUtils\Auth\DefaultCredentialsProvider](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Auth/DefaultCredentialsProvider.php) - Simple default implementation of the interface
+* [TgUtils\Auth\CredentialsProvider](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Auth/CredentialsProvider.php) - Interface to provide username and password to other objects
+* [TgUtils\Auth\DefaultCredentialsProvider](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Auth/DefaultCredentialsProvider.php) - Simple default implementation of the interface
 
 ## Sensitive Data Obfuscation
 
@@ -303,7 +303,7 @@ $priceString = FormatUtils::formatPrice(3000.643, 'EUR');
 $fileSize = FormatUtils::formatUnit(3000643, 'B');
 ```
 
-Inspect the [source code](https://github.com/technicalguru/php-utils/blob/src/TgUtils/Utils.php) to find more about the methods available.
+Inspect the [source code](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Utils.php) to find more about the methods available.
 
 # Contribution
 Report a bug, request an enhancement or pull request at the [GitHub Issue Tracker](https://github.com/technicalguru/php-utils/issues).
