@@ -35,7 +35,7 @@ class Processor {
 	  * if attribute is missing, a snippet with this name will be searched
 	  * @param string $s    - the content to be processed
 	  */
-	protected function process($s) {
+	public function process($s) {
 		$rc = '';
 		$matches = array();
 		preg_match_all('/{{(.*?)}}/', $s, $matches, PREG_OFFSET_CAPTURE);
@@ -70,6 +70,8 @@ class Processor {
 		else {
 			$snippet = $this->getSnippet($object);
 			if ($snippet != NULL) {
+				if (is_string($snippet)) return $snippet;
+				if (is_array($snippet))  return I18N::_($snippet, $this->language);
 				return $snippet->getOutput($this);
 			}
 		}

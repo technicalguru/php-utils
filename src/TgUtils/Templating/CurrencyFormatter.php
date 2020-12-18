@@ -12,7 +12,7 @@ class CurrencyFormatter implements Formatter {
 
 	public function format($value, $params, Processor $processor) {
 		if ($value == NULL) return '';
-		$currency = count($params) > 0 ? $params[0] : ''
+		$currency = count($params) > 0 ? $params[0] : '';
 		return trim(\TgUtils\FormatUtils::formatPrice($value, $currency, $processor->language, ' '));
 	}
 }
