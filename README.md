@@ -232,19 +232,19 @@ curly brackets `{{variable-definition}}`. The processor knows objects, snippets 
 with `{{objectKey.attributeName}}`, e.g. `{{user.name}}`.
 
 **Snippets** are more complex replacements that will be inserted in your template. This is useful when you need the same complex
-text structure in multiple template generations, e.g. for a footer or a header text. Snippets are references in a template by
-their keys only: `{{snippetKey}}`. A snippet is implemented by the interface [Snippet](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Templating/Snippet.php).
+text structure in multiple template generations, e.g. for a footer or a header text. Snippets are referenced in a template by
+their keys only: `{{snippetKey}}`. A snippet is implemented by the interface [`Snippet`](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Templating/Snippet.php).
 
 **Formatters** can be used to format an object's attribute. Formatters can take parameters to further customize the formatting. A good example
 is the [`DateFormatter`](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Templating/DateFormatter.php). The formatter
 is referenced with the object's attribute by `{{objectKey.attribute:formatterKey:param1:param2...}}`, e.g. `{{user.created_on:date:rfc822}}`.
 
-All three elements - objects, snippets and formatters - are given to the [Processor](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Templating/Processor.php) in its constructor:
+All three elements - objects, snippets and formatters - are given to the [`Processor`](https://github.com/technicalguru/php-utils/blob/main/src/TgUtils/Templating/Processor.php) in its constructor:
 
 ```
 $objects    = array('user'   => $myUser);
 $snippets   = array('header' => new HeaderSnippet(), 'footer' => $new FooterSnippet());
-$formatters = array('date' => new DateFormatter();
+$formatters = array('date'   => new DateFormatter());
 $language   = 'en';
 $processor = new Processor($objects, $snippets, $formatters, $language);
 ```
