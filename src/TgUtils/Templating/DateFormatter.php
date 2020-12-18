@@ -21,7 +21,7 @@ class DateFormatter implements Formatter {
 			switch ($params[0]) {
 			case 'unix': return $value->toUnix();
 			case 'iso8601': return $value->toISO8601(TRUE);
-			case 'rfc8601': return $value->toRFC822(TRUE);
+			case 'rfc822': return $value->toRFC822(TRUE);
 			}
 			return $value->format(\TgI18n\I18N::_($params[0]), TRUE, TRUE, $processor->language);
 		}

@@ -2,6 +2,8 @@
 
 namespace TgUtils\Templating;
 
+use TgI18n\I18N;
+
 /** Provides some basic templating mechanism */
 class Processor {
 
@@ -89,13 +91,13 @@ class Processor {
 	 * Returns the formatter with the given key or NULL.
 	 */
 	public function getFormatter($name) {
-		return isset($this->formatter[$name]) ? $this->formatter[$name] : NULL; 
+		return isset($this->formatters[$name]) ? $this->formatters[$name] : NULL; 
 	}
 
 	/**
 	 * Returns the snippet with the given key or NULL.
 	 */
-	protected function getSnippet($name) {
+	public function getSnippet($name) {
 		return isset($this->snippets[$name]) ? $this->snippets[$name] : NULL; 
 	}
 
@@ -105,7 +107,7 @@ class Processor {
 	  * The formatter "datetime" will be used then.
 	  * More arguments for the formatter can follow, separated with : again
 	  */
-	protected function getAttribute($objName, $attr) {
+	public function getAttribute($objName, $attr) {
 		$object = $this->getObject($objName);
 		$rc = '';
 		if ($object != null) {
@@ -120,13 +122,13 @@ class Processor {
 				if ($attrFormat != 'plain') {
 					$formatter = $this->getFormatter($attrFormat);
 					if ($formatter != NULL) {
-						$rc = $formatter->format($object->$attrName, $attrDef, $this);
+						$rc = $formatter->format($value, $attrDef, $this);
 					}
 				} else if (is_object($value)) {
 					if (is_a($value, 'TgUtils\\Date')) {
 						$formatter = $this->getFormatter('date');
 						if ($formatter == NULL) $formatter = new DateFormatter();
-						$rc = $formatter->format($object->$attrName, $attrDef, $this);
+						$rc = $formatter->format($value, $attrDef, $this);
 					} else {
 						$rc = $value->__toString();
 					}
