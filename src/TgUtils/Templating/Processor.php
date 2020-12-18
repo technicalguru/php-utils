@@ -66,16 +66,16 @@ class Processor {
 	  * If attribute is missing, a snippet with this name will be searched
 	  */
 	protected function getVar($s) {
-		$parts = explode('.', $s);
-		$object = $parts[0];
-		if (count($parts) > 1) return $this->getAttribute($object, $parts[1]);
+		$parts     = explode('.', $s);
+		$objectKey = $parts[0];
+		if (count($parts) > 1) return $this->getAttribute($objectKey, $parts[1]);
 		else {
 			// Is there a string object?
-			$object  = $this->getObject($object);
+			$object = $this->getObject($objectKey);
 			if (is_string($object)) return $object;
 
 			// Try a snippet
-			$snippet = $this->getSnippet($object);
+			$snippet = $this->getSnippet($objectKey);
 			if ($snippet != NULL) {
 				if (is_string($snippet)) return $snippet;
 				if (is_array($snippet))  return I18N::_($snippet, $this->language);
