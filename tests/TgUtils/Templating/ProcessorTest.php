@@ -25,6 +25,13 @@ class ProcessorTest extends TestCase {
         $this->assertEquals('This is the output: This is my-snippet.', $result);
     }
 
+    public function testSnippetWithParameter(): void {
+        $processor = self::createProcessor();
+        $template  = 'This is the output: {{mySnippet:aParameter}}';
+        $result    = $processor->process($template);
+        $this->assertEquals('This is the output: This is my-snippet.aParameter', $result);
+    }
+
     public function testSimpleAttribute(): void {
         $processor = self::createProcessor();
         $template  = 'This is the output: {{testObject.name}}';
@@ -60,7 +67,7 @@ class ProcessorTest extends TestCase {
 
 class TestSnippet implements Snippet {
 
-    public function getOutput($processor) {
-        return 'This is my-snippet.';
+    public function getOutput($processor, $params) {
+        return 'This is my-snippet.'.(count($params) > 0 ? $params[0] : '');
     }
 }

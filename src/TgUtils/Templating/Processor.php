@@ -75,11 +75,13 @@ class Processor {
 			if (is_string($object)) return $object;
 
 			// Try a snippet
-			$snippet = $this->getSnippet($objectKey);
+			$parts      = explode(':', $objectKey);
+			$snippetKey = array_shift($parts);
+			$snippet    = $this->getSnippet($snippetKey);
 			if ($snippet != NULL) {
 				if (is_string($snippet)) return $snippet;
 				if (is_array($snippet))  return I18N::_($snippet, $this->language);
-				return $snippet->getOutput($this);
+				return $snippet->getOutput($this, $parts);
 			}
 		}
 		return '[Not defined: '.$s.']';
