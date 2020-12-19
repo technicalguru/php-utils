@@ -32,6 +32,8 @@ class Request {
 	public $headers;
 	/** The host as the user requested it (can differ from $httpHost in reverse proxy setups) */
 	public $host;
+	/** The URI to the root of the server, combination of protocol and host. */
+	public $rootUri;
 	/** The HTTP host - the host mentioned in Host: header */
 	public $httpHost;
 	/** The URI which includes the parameters */
@@ -77,6 +79,7 @@ class Request {
 		$this->protocol     = $this->initProtocol();
 		$this->httpHost     = $_SERVER['HTTP_HOST'];
 		$this->host         = $this->initHost();
+		$this->rootUri      = $this->initRootUri();
         if (isset($_SERVER['REQUEST_URI'])) {
 	        $this->uri      = $_SERVER['REQUEST_URI'];
         } else {
@@ -134,6 +137,13 @@ class Request {
 			return $_SERVER['HTTP_X_FORWARDED_PROTO'];
 		}
 		return $_SERVER['REQUEST_SCHEME'];
+	}
+
+	/**
+	 * Returns the base for the URI - protocol and host.
+	 */
+	protected function initRootUri() {
+		return $this->protocol.'://'.$this->host;
 	}
 
 	/**
