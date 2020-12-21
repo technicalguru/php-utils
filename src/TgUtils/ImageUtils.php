@@ -4,6 +4,14 @@ namespace TgUtils;
 
 class ImageUtils {
 
+	/**
+	 * Creates a thumbnail image from the given image at the path.
+	 * @param string $imagepath - path of original image
+	 * @param int    $maxWidth  - maximum new width
+	 * @param int    $maxHeight - maximum new height
+	 * @param string $targetDir - target directory
+	 * @return path of the new image file or NULL if it could not be created.
+	 */
 	public static function createThumbnail($imagePath, $maxWidth, $maxHeight, $targetDir = NULL) {
 		$pathinfo   = pathinfo($imagePath);
 		$targetPath = '.';
@@ -13,7 +21,6 @@ class ImageUtils {
 			$targetPath = $targetDir.'/'.$pathinfo['filename'].'.thumbnail.';
 		}
 		if (class_exists('Imagick')) {
-			echo 'Using ImageMagick<br>';
 			$image = new \Imagick($imagePath);
 			$image->thumbnailImage($maxWidth, $maxHeight, TRUE);
 			$targetPath .= 'png';
@@ -26,19 +33,11 @@ class ImageUtils {
 			$image = self::readImage($imagePath, $imageDetails);
 			if ($image != NULL) {
 				// Compute new dimensions
-				$thWidth  = $maxWidth;
-				$thHeight = $maxHeight;
-				if ($imageDetails[0] < $imageDetails[1]) {
-					// Portrait
-					$thWidth = intval($imageDetails[0] * $thHeight / $imageDetails[1]);
-				} else {
-					// Landscape or squared
-					$thHeight = intval($imageDetails[1] * $thWidth / $imageDetails[0]);
-				}
+				$size = self::computeNewSize($imageDetails[0], $imageDetails[1], $maxWidth, $maxHeight);
 
 				// Scale it
-		        $thumbnail = imagecreatetruecolor($thWidth, $thHeight);
-				imagecopyresized($thumbnail, $image, 0, 0, 0, 0, $thWidth, $thHeight, $imageDetails[0], $imageDetails[1]);
+		        $thumbnail = imagecreatetruecolor($size->width, $size-height);
+				imagecopyresized($thumbnail, $image, 0, 0, 0, 0, $size->width, $size->height, $imageDetails[0], $imageDetails[1]);
 				// Writing it
 				$gdInfo  = gd_info();
 				// Preferential order PNG, JPEG, WEBP, XPM, WBMP, GIF, BMP 
@@ -75,60 +74,83 @@ class ImageUtils {
 		return $targetPath;
 	}
 
+	/**
+	 * Reads an image with GD library.
+	 * @param string $imagePath - where the image is stored.
+	 * @param array  $imageDetails - the result from getimagesize() call when executed before.
+	 * @return resource form GD library
+	 */
 	public static function readImage($imagePath, $imageDetails = NULL) {
 		if (file_exists($imagePath)) {
-			if (class_exists('Imagick')) {
-			} else {
-				if ($imageDetails == NULL) $imageDetails = getimagesize($imagePath);
-				if ($imageDetails !== FALSE) {
-					$gdInfo  = gd_info();
-					$image        = NULL;
-					switch ($imageDetails[2]) {
-					case IMAGETYPE_BMP:
-						if ($gdInfo['BMP Support']) {
-							$image = imagecreatefrombmp($imagePath);
-						}
-						break;
-					case IMAGETYPE_GIF:
-						if ($gdInfo['GIF Read Support']) {
-							$image = imagecreatefromgif($imagePath);
-						}
-						break;
-					case IMG_JPEG: 
-					case IMG_JPEG: 
-						if ($gdInfo['JPEG Support']) {
-							$image = imagecreatefromjpeg($imagePath);
-						}
-						break;
-					case IMAGETYPE_PNG:
-						if ($gdInfo['PNG Support']) {
-							$image = imagecreatefrompng($imagePath);
-						}
-						break;
-					case IMAGETYPE_WBMP:
-						if ($gdInfo['WBMP Support']) {
-							$image = imagecreatefromwbmp($imagePath);
-						}
-						break;
-					case IMG_XPM:
-						if ($gdInfo['XPM Support']) {
-							$image = imagecreatefromxpm($imagePath);
-						}
-						break;
-					case IMAGETYPE_WEBP:
-						if ($gdInfo['WebP Support']) {
-							$image = imagecreatefromwebp($imagePath);
-						}
-						break;
+			if ($imageDetails == NULL) $imageDetails = getimagesize($imagePath);
+			if ($imageDetails !== FALSE) {
+				$gdInfo  = gd_info();
+				$image        = NULL;
+				switch ($imageDetails[2]) {
+				case IMAGETYPE_BMP:
+					if ($gdInfo['BMP Support']) {
+						$image = imagecreatefrombmp($imagePath);
 					}
+					break;
+				case IMAGETYPE_GIF:
+					if ($gdInfo['GIF Read Support']) {
+						$image = imagecreatefromgif($imagePath);
+					}
+					break;
+				case IMG_JPEG: 
+				case IMG_JPEG: 
+					if ($gdInfo['JPEG Support']) {
+						$image = imagecreatefromjpeg($imagePath);
+					}
+					break;
+				case IMAGETYPE_PNG:
+					if ($gdInfo['PNG Support']) {
+						$image = imagecreatefrompng($imagePath);
+					}
+					break;
+				case IMAGETYPE_WBMP:
+					if ($gdInfo['WBMP Support']) {
+						$image = imagecreatefromwbmp($imagePath);
+					}
+					break;
+				case IMG_XPM:
+					if ($gdInfo['XPM Support']) {
+						$image = imagecreatefromxpm($imagePath);
+					}
+					break;
+				case IMAGETYPE_WEBP:
+					if ($gdInfo['WebP Support']) {
+						$image = imagecreatefromwebp($imagePath);
+					}
+					break;
 				}
-				return $image;
 			}
+			return $image;
 		}
 		return NULL;
 	}
 
-	public static function computeRatioSize($image, $maxWidth, $maxHeight) {
+	/**
+	 * Returns an object with width and height attributes to resize.
+	 * @param int $origWidth  - original width
+	 * @param int $origHeight - original height
+	 * @param int $maxWidth   - maximum new width
+	 * @param int $maxHeight  - maximum new height
+	 * @return object with width an height attribute
+	 */
+	public static function computeNewSize($origWidth, $origHeight, $maxWidth, $maxHeight) {
+		// Compute new dimensions
+		$rc = new \stdClass;
+		$rc->width  = $maxWidth;
+		$rc->height = $maxHeight;
+		if ($origWidth < $origHeight) {
+			// Portrait
+			$rc->width = intval($origWidth * $rc->height / $origHeight);
+		} else {
+			// Landscape or squared
+			$rc->height = intval($origHeight * $rc->width / $origWidth);
+		}
+		return $rc;
 	}
 }
 
