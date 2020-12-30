@@ -42,6 +42,8 @@ class Request {
 	public $path;
 	/** The path of the original request (requested at proxy). Does not include parameters */
 	public $originalPath;
+	/** The original request (requested at proxy). Includes parameters */
+	public $originalUri;
 	/** The path split in its elements */
 	public $pathElements;
 	/** The parameters as a string */
@@ -95,6 +97,7 @@ class Request {
 		$this->documentRoot = $this->initDocumentRoot();
 		$this->webRoot      = $this->initWebRoot(TRUE);
 		$this->originalPath = $this->initOriginalPath();
+		$this->originalUri  = $this->initOriginalUri();
 		$this->localWebRoot = $this->initWebRoot(FALSE);
 		$this->webRootUri   = $this->initWebRootUri();
 		$this->appRoot      = $this->documentRoot;
@@ -312,6 +315,19 @@ class Request {
 			if (strpos($rc, $arr[0]) === 0) {
 				$rc = $arr[1].substr($rc, strlen($arr[0]));
 			}
+		}
+		return $rc;
+	}
+
+	/**
+	 * Returns the original URI as request by the end user.
+	 * The path might be different from $this->path as
+	 * a webroot mapping might be involved.
+	 */
+	protected function initOriginalUri() {
+		$rc = $this->originalPath;
+		if ($this->params) {
+			$rc .= '?'.$this->params;
 		}
 		return $rc;
 	}
