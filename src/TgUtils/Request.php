@@ -77,7 +77,7 @@ class Request {
 	public function __construct() {
 		// Sequence matters!
 		$this->method       = $_SERVER['REQUEST_METHOD'];
-		$this->headers      = getallheaders();
+		$this->headers      = $this->initHeaders();
 		$this->protocol     = $this->initProtocol();
 		$this->httpHost     = $_SERVER['HTTP_HOST'];
 		$this->host         = $this->initHost();
@@ -107,6 +107,18 @@ class Request {
 
 		// Will be deprecated
 		$this->langCode     = 'en';
+	}
+
+	/** 
+	 * Different products return different keys in headers. We make all keys lowercase here.
+	 */
+	protected function initHeaders() {
+		$headers = getallheaders();
+		$rc = array();
+		foreach ($headers AS $key => $value) {
+			$rc[strtolower($key)] = $value;
+		}
+		return $rc;
 	}
 
 	/**
@@ -263,7 +275,7 @@ class Request {
 	 * @return string the value of the header.
 	 */
 	public function getHeader($key) {
-		if (isset($this->headers[$key])) return $this->headers[$key];
+		if (isset($this->headers[strtolower($key)])) return $this->headers[strtolower($key)];
 		return NULL;
 	}
 
