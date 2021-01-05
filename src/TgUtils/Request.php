@@ -230,13 +230,14 @@ class Request {
 	public function getPostParams() {
 		if ($this->postParams == NULL) {
 			$this->postParams = array();
-			$headers = $this->headers;
 			// Check that we have content-length
-			if (isset($headers['Content-Length'])) {
-				$len = intval($headers['Content-Length']);
+			$len = $this->getHeader('Content-Length');
+			if ($len) {
+				$len = intval($len);
 				// Check that we have  a valid content-length
 				if (($len>0) && ($len<10000)) {
 					$this->postParams = $_POST;
+					Log::debug('postParams', $this->postParams);
 				} else {
 					Log::registerMessage(new Error('POST content too big'));
 				}
