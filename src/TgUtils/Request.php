@@ -237,7 +237,6 @@ class Request {
 				// Check that we have  a valid content-length
 				if (($len>0) && ($len<10000)) {
 					$this->postParams = $_POST;
-					Log::debug('postParams', $this->postParams);
 				} else {
 					Log::registerMessage(new Error('POST content too big'));
 				}
