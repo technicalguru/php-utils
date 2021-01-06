@@ -101,4 +101,15 @@ class Utils {
 		}
 		return $rc;
 	}
+
+	/**
+	 * Test whether the given string is NULL or empty after trimming.
+	 * @param mixed $s - string or NULL to be tested
+	 * @return boolean TRUE when string is empty
+	 */
+	public static function isEmpty($s) {
+		if ($s == NULL) return TRUE;
+		return strlen(trim($s)) == 0;
+	}
+
 }
