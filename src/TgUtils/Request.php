@@ -32,6 +32,8 @@ class Request {
 	public $headers;
 	/** The host as the user requested it (can differ from $httpHost in reverse proxy setups) */
 	public $host;
+	/** The URI to the root of the server, combination of protocol and host. */
+	public $rootUri;
 	/** The HTTP host - the host mentioned in Host: header */
 	public $httpHost;
 	/** The URI which includes the parameters */
@@ -40,6 +42,8 @@ class Request {
 	public $path;
 	/** The path of the original request (requested at proxy). Does not include parameters */
 	public $originalPath;
+	/** The original request (requested at proxy). Includes parameters */
+	public $originalUri;
 	/** The path split in its elements */
 	public $pathElements;
 	/** The parameters as a string */
@@ -73,10 +77,11 @@ class Request {
 	public function __construct() {
 		// Sequence matters!
 		$this->method       = $_SERVER['REQUEST_METHOD'];
-		$this->headers      = getallheaders();
+		$this->headers      = $this->initHeaders();
 		$this->protocol     = $this->initProtocol();
 		$this->httpHost     = $_SERVER['HTTP_HOST'];
 		$this->host         = $this->initHost();
+		$this->rootUri      = $this->initRootUri();
         if (isset($_SERVER['REQUEST_URI'])) {
 	        $this->uri      = $_SERVER['REQUEST_URI'];
         } else {
@@ -92,6 +97,7 @@ class Request {
 		$this->documentRoot = $this->initDocumentRoot();
 		$this->webRoot      = $this->initWebRoot(TRUE);
 		$this->originalPath = $this->initOriginalPath();
+		$this->originalUri  = $this->initOriginalUri();
 		$this->localWebRoot = $this->initWebRoot(FALSE);
 		$this->webRootUri   = $this->initWebRootUri();
 		$this->appRoot      = $this->documentRoot;
@@ -101,6 +107,18 @@ class Request {
 
 		// Will be deprecated
 		$this->langCode     = 'en';
+	}
+
+	/** 
+	 * Different products return different keys in headers. We make all keys lowercase here.
+	 */
+	protected function initHeaders() {
+		$headers = getallheaders();
+		$rc = array();
+		foreach ($headers AS $key => $value) {
+			$rc[strtolower($key)] = $value;
+		}
+		return $rc;
 	}
 
 	/**
@@ -134,6 +152,13 @@ class Request {
 			return $_SERVER['HTTP_X_FORWARDED_PROTO'];
 		}
 		return $_SERVER['REQUEST_SCHEME'];
+	}
+
+	/**
+	 * Returns the base for the URI - protocol and host.
+	 */
+	protected function initRootUri() {
+		return $this->protocol.'://'.$this->host;
 	}
 
 	/**
@@ -205,10 +230,10 @@ class Request {
 	public function getPostParams() {
 		if ($this->postParams == NULL) {
 			$this->postParams = array();
-			$headers = $this->headers;
 			// Check that we have content-length
-			if (isset($headers['Content-Length'])) {
-				$len = intval($headers['Content-Length']);
+			$len = $this->getHeader('Content-Length');
+			if ($len) {
+				$len = intval($len);
 				// Check that we have  a valid content-length
 				if (($len>0) && ($len<10000)) {
 					$this->postParams = $_POST;
@@ -250,7 +275,7 @@ class Request {
 	 * @return string the value of the header.
 	 */
 	public function getHeader($key) {
-		if (isset($this->headers[$key])) return $this->headers[$key];
+		if (isset($this->headers[strtolower($key)])) return $this->headers[strtolower($key)];
 		return NULL;
 	}
 
@@ -302,6 +327,19 @@ class Request {
 			if (strpos($rc, $arr[0]) === 0) {
 				$rc = $arr[1].substr($rc, strlen($arr[0]));
 			}
+		}
+		return $rc;
+	}
+
+	/**
+	 * Returns the original URI as request by the end user.
+	 * The path might be different from $this->path as
+	 * a webroot mapping might be involved.
+	 */
+	protected function initOriginalUri() {
+		$rc = $this->originalPath;
+		if ($this->params) {
+			$rc .= '?'.$this->params;
 		}
 		return $rc;
 	}
