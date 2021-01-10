@@ -58,5 +58,70 @@ class FormatUtils {
 		$size = $rc != $unit ? number_format($size, $precision, I18N::_('decimal_point', $language), I18N::_('thousand_sep', $language)) : number_format($size, 0, I18N::_('decimal_point', $language), I18N::_('thousand_sep', $language));
 		return $size.' '.$rc;
 	}
+
+	/**
+	 * Provides the complete Exception message as string with newlines.
+	 * This method does not shorten any string as the getTraceAsString() method does.
+	 * @param Throwable $throwable the exception to trace
+	 * @return string the complete exception message and stack
+	 */
+	public static function getTraceAsString($throwable) {
+		return implode("\n", self::getTraceLines($throwable));
+	}
+
+	/**
+	 * Provides the complete Exception message as array of strings.
+	 * This method does not shorten any string as the getTraceAsString() method does.
+	 * @param Throwable $throwable the exception to trace
+	 * @return array the complete exception message and stack in separate strings
+	 */
+	public static function getTraceLines($throwable) {
+		$rc = array(get_class($throwable).': '.$throwable->getMessage());
+		$rc[] = 'at '.$throwable->getFile().'(line '.$throwable->getLine().'): ';
+
+		$trace = $throwable->getTrace();
+		foreach ($trace AS $traceLine) {
+			$rc[] = self::getTraceLine($traceLine);
+		}
+		$previous = $throwable->getPrevious();
+		if ($previous != NULL) {
+			$rc[] = 'Caused by:';
+			$rc = array_merge($rc, self::getTraceLines($previous));
+		}
+		return $rc;
+	}
+
+	/**
+	 * Provides the line of a stack trace as string (no shortening).
+	 * @param array $entry - the entry of the stack trace as given by getTrace()
+	 * @return string the entry as string
+	 */
+	protected static function getTraceLine($entry) {
+		$rc = 'at ';
+		if (isset($entry['file']))  $rc .= $entry['file'];
+		if (isset($entry['line']))  $rc .= ' (line '.$entry['line'].')';
+		if (isset($entry['class']) || isset($entry['type']) || isset($entry['function'])) {
+			if (isset($entry['file']))  $rc .= ': ';
+			if (isset($entry['class'])) $rc .= $entry['class'];
+			if (isset($entry['type']))  $rc .= $entry['type'];
+			if (isset($entry['function'])) {
+				$rc .= $entry['function'].'(';
+				if (isset($entry['args'])) {
+					$first = TRUE;
+					foreach ($entry['args'] AS $arg) {
+						if ($first) $first = FALSE;
+						else $rc .= ',';
+						if (is_object($arg)) $rc .= get_class($arg);
+						else if (is_array($arg)) $rc .= 'array';
+						else if (is_string($arg)) $rc .= "'$arg'";
+						else $rc .= $arg;
+					}
+				}
+				$rc .= ')';
+			}
+		}
+		return $rc;
+	}
+
 }
 
