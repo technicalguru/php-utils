@@ -28,7 +28,7 @@ class Obfuscation {
         if (is_array($obfuscated)) {
             $a = $obfuscated[0];
             $e = $obfuscated[1];
-            $script = '<script type="text/javascript">var a="'.$a.'";var b=a.split("").sort().join("");var c="'.$e.'";var d="";for(var e=0;e<c.length;e++)d+=b.charAt(a.indexOf(c.charAt(e)));jQuery("#'.$id.'").html("<a href=\""+d+"\">"+d+"</a>")</script>';
+            $script = '<script type="text/javascript">var a="'.$a.'";var b=a.split("").sort().join("");var c="'.$e.'";var d="";for(var e=0;e<c.length;e++)d+=b.charAt(a.indexOf(c.charAt(e)));jQuery("#'.$id.'").html("<a href=\"mailto:"+d+"\">"+d+"</a>")</script>';
             if ($id == NULL) {
                 $id = self::generateObfuscationId();
                 return self::getObfuscatedHtmlSpan($id).$script;

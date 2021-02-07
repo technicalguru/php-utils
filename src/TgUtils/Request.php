@@ -235,10 +235,10 @@ class Request {
 			if ($len) {
 				$len = intval($len);
 				// Check that we have  a valid content-length
-				if (($len>0) && ($len<10000)) {
+				if ($len>0) {
 					$this->postParams = $_POST;
 				} else {
-					Log::registerMessage(new Error('POST content too big'));
+					Log::register(new Error('POST content invalid'));
 				}
 			}
 		}
