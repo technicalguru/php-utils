@@ -126,7 +126,7 @@ class Utils {
 	 * @param array $arr - the array to be tested
 	 * @return boolean TRUE - when array is associative, FALSE otherwise
 	 */
-	public static isAssoc(array $arr) {
+	public static function isAssoc(array $arr) {
 		if (array() === $arr) return FALSE;
 		return array_keys($arr) !== range(0, count($arr)-1);
 	}
