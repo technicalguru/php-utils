@@ -121,4 +121,14 @@ class Utils {
 		return strlen(trim($s)) == 0;
 	}
 
+	/**
+	 * Checks whether an array is associative or not.
+	 * @param array $arr - the array to be tested
+	 * @return boolean TRUE - when array is associative, FALSE otherwise
+	 */
+	public static isAssoc(array $arr) {
+		if (array() === $arr) return FALSE;
+		return array_keys($arr) !== range(0, count($arr)-1);
+	}
+
 }
