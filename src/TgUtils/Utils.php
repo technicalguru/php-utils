@@ -122,6 +122,15 @@ class Utils {
 	}
 
 	/**
+	 * Tests whether string is a valid email syntax.
+	 * @param string $s - string to be tested
+	 * @return boolean TRUE when string is an email.
+	 */
+	public static function isEmail($s) {
+		return filter_var($s, FILTER_VALIDATE_EMAIL);
+	}
+
+	/**
 	 * Checks whether an array is associative or not.
 	 * @param array $arr - the array to be tested
 	 * @return boolean TRUE - when array is associative, FALSE otherwise
