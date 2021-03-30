@@ -13,7 +13,11 @@ class ImageUtils {
 	 * @return string - the path of the new image file, e.g. /target/dir/basename.variation.png (or NULL in case of GD issues)
 	 */
 	public static function createThumbnail($imagePath, $maxWidth, $maxHeight, $targetDir = NULL) {
-		$targetPath = self::getNewPath($imagePath, 'thumbnail', $targetDir);
+		if (!file_exists($imagePath)) {
+			$targetPath = NULL;
+		} else {
+			$targetPath = self::getNewPath($imagePath, 'thumbnail', $targetDir);
+		}
 
 		if ($targetPath != NULL) {
 			if (class_exists('Imagick')) {
