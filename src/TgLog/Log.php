@@ -156,6 +156,14 @@ class Log {
 	}
 
 	/**
+	 * Return whether debug level will be logged.
+	 * @return TRUE when log level enabled.
+	 */
+	public static function isDebug() {
+		return self::instance()->isLogLevelIncluded(self::DEBUG);
+	}
+
+	/**
 	 * Debug message into log.
 	 * @param string $s - the message
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
@@ -171,6 +179,14 @@ class Log {
 	 */
 	public static function info($s, $o = null) {
 		self::instance()->logInfo($s, $o);
+	}
+
+	/**
+	 * Return whether info level will be logged.
+	 * @return TRUE when log level enabled.
+	 */
+	public static function isInfo() {
+		return self::instance()->isLogLevelIncluded(self::INFO);
 	}
 
 	/**
@@ -192,6 +208,14 @@ class Log {
 	}
 
 	/**
+	 * Return whether warn level will be logged.
+	 * @return TRUE when log level enabled.
+	 */
+	public static function isWarn() {
+		return self::instance()->isLogLevelIncluded(self::WARN);
+	}
+
+	/**
 	 * Warning message into log.
 	 * @param string $s - the message
 	 * @param mixed  $o - an oject to be dumped along with message. An Exception object will cause a stacktrace dump (optional).
@@ -207,6 +231,14 @@ class Log {
 	 */
 	public static function error($s, $o = null) {
 		self::instance()->logError($s, $o);
+	}
+
+	/**
+	 * Return whether error level will be logged.
+	 * @return TRUE when log level enabled.
+	 */
+	public static function isError() {
+		return self::instance()->isLogLevelIncluded(self::ERROR);
 	}
 
 	/**
@@ -295,7 +327,7 @@ class Log {
 	public static function get() {
 		return $_SESSION['messages'];
 	}
-	
+
 	/**
 	 * Internal function to check whether a loglevel is supposed to be logged.
 	 * @param string $sev - the log level to check
