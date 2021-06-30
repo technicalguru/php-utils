@@ -423,7 +423,10 @@ class Date extends \DateTime {
 			$timezone = new \DateTimeZone($timezone);
 		}
 		$d = \DateTime::createFromFormat($format, $timeString, $timezone);
-		return self::createLocalInstance((int)$d->format('U'), $timezone);
+		if ($d !== FALSE) {
+			return self::createLocalInstance((int)$d->format('U'), $timezone);
+		}
+		return FALSE;
 	}
 
 	public static function createFromMysql($timeString, $timezone = null) {
