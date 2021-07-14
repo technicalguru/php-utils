@@ -12,11 +12,12 @@ namespace TgLog;
  */
 class Log {
     
-    public const NONE  = 'none';
-    public const DEBUG = 'debug';
-    public const INFO  = 'info';
-    public const WARN  = 'warn';
-    public const ERROR = 'error';
+    public const NONE    = 'none';
+    public const DEBUG   = 'debug';
+    public const INFO    = 'info';
+    public const WARN    = 'warn';
+    public const ERROR   = 'error';
+    public const SUCCESS = 'success';
     
     /** The available log priorities */
     protected static $logPriorities;

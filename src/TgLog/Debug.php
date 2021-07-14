@@ -11,9 +11,10 @@ class Debug extends Message {
     /**
      * Constructs the debug.
      * @param string $message - the message text.
+     * @param mixed  $data    - custom additional data for application specific usage.
      */
-	public function __construct($message) {
-		parent::__construct('debug', $message);
+	public function __construct($message, $data = NULL) {
+		parent::__construct('debug', $message, $data);
 	}
 
 }
