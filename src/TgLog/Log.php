@@ -96,11 +96,12 @@ class Log {
 
 	/**
 	 * Logs the given message and, optionally, object with given severity.
-	 * @param string $sev - the severity
-	 * @param string $s - the log message
-	 * @param mixed $o - an object to be logged along with the message.
+	 * @param string $sev  - the severity
+	 * @param string $s    - the log message
+	 * @param mixed  $o    - an object to be logged along with the message.
+     * @param mixed  $data - custom additional data to be held with log message for application specific usage.
 	 */
-	protected function log($sev, $s, $o = null) {
+	protected function log($sev, $s, $o = NULL, $data = NULL) {
 		if (!is_string($s)) $s = json_encode($s, JSON_PRETTY_PRINT);
 		if ($o != null) {
 			if ($o instanceof \Throwable) {
@@ -109,7 +110,7 @@ class Log {
 				$s .= ': '.json_encode($o, JSON_PRETTY_PRINT);
 			}
 		}
-		$this->messages[$sev][] = $s;
+		$this->messages[$sev][] = new Message($sev, $s, $data);
 		$prefix = $this->getAppName() != NULL ? '['.$this->getAppName().']' : '';
 		if ($this->isLogLevelIncluded($sev)) error_log($prefix.'['.strtoupper($sev).'] '.$s);
 	}
@@ -307,10 +308,10 @@ class Log {
     public static function register(Message $message) {
 		$_SESSION['messages'][] = $message;
 		switch ($message->getType()) {
-		case 'error':   self::error($message->getMessage()); break;
-		case 'warning': self::warn($message->getMessage()); break;
-		case 'info':    self::info($message->getMessage()); break;
-		case 'debug':   self::debug($message->getMessage()); break;
+		case self::ERROR: self::error($message->getMessage()); break;
+		case self::WARN:  self::warn($message->getMessage()); break;
+		case self::INFO:  self::info($message->getMessage()); break;
+		case self::DEBUG: self::debug($message->getMessage()); break;
 		}
 	}
 

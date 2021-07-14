@@ -14,7 +14,7 @@ class Warning extends Message {
      * @param mixed  $data    - custom additional data for application specific usage.
      */
 	public function __construct($message, $data = NULL) {
-		parent::__construct('warning', $message, $data);
+		parent::__construct(Log::WARN, $message, $data);
 	}
 
 }

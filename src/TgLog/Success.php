@@ -14,7 +14,7 @@ class Success extends Message {
      * @param mixed  $data    - custom additional data for application specific usage.
      */
     public function __construct($message, $data = NULL) {
-		parent::__construct('success', $message, $data);
+		parent::__construct(Log::SUCCESS, $message, $data);
 	}
 
 }

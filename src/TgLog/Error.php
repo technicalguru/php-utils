@@ -14,7 +14,7 @@ class Error extends Message {
      * @param mixed  $data    - custom additional data for application specific usage.
      */
 	public function __construct($message, $data = NULL) {
-		parent::__construct('error', $message, $data);
+		parent::__construct(Log::ERROR, $message, $data);
 	}
 
 }

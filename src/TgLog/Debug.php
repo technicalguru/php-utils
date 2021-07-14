@@ -14,7 +14,7 @@ class Debug extends Message {
      * @param mixed  $data    - custom additional data for application specific usage.
      */
 	public function __construct($message, $data = NULL) {
-		parent::__construct('debug', $message, $data);
+		parent::__construct(Log::DEBUG, $message, $data);
 	}
 
 }
