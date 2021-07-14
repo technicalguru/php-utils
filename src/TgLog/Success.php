@@ -11,9 +11,10 @@ class Success extends Message {
     /**
      * Constructs the success message.
      * @param string $message - the message text.
+     * @param mixed  $data    - custom additional data for application specific usage.
      */
-    public function __construct($message) {
-		parent::__construct('success', $message);
+    public function __construct($message, $data = NULL) {
+		parent::__construct('success', $message, $data);
 	}
 
 }

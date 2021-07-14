@@ -10,10 +10,12 @@ class Message {
 
 	protected $type;
 	protected $message;
+	protected $data;
 
-	public function __construct($type, $message) {
+	public function __construct($type, $message, $data = NULL) {
 		$this->type	   = $type;
 		$this->message = $message;
+		$this->data    = $data;
 	}
 
 	/**
@@ -30,5 +32,22 @@ class Message {
 	 */
 	public function getMessage() {
 		return $this->message;
+	}
+
+	/**
+	 * Sets the custom additonal data
+	 * @param mixed $data - the data.
+	 */
+	public function setData($data) {
+		$this->data = $data;
+		return $this;
+	}
+
+	/**
+	 * Returns the custom additonal data
+	 * @return mixed the data.
+	 */
+	public function getData() {
+		return $this->data;
 	}
 }

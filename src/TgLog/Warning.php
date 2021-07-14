@@ -11,9 +11,10 @@ class Warning extends Message {
     /**
      * Constructs the warning.
      * @param string $message - the message text.
+     * @param mixed  $data    - custom additional data for application specific usage.
      */
-	public function __construct($message) {
-		parent::__construct('warning', $message);
+	public function __construct($message, $data = NULL) {
+		parent::__construct('warning', $message, $data);
 	}
 
 }
