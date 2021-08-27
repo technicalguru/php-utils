@@ -5,7 +5,7 @@ namespace TgUtils;
 class ImageUtils {
 
 	/**
-	 * Creates a thumbnail image from the given image at the path.
+	 * Creates a thumbnail image from the given image at the path. (shorthand for createVariation)
 	 * @param string $imagepath - path of original image
 	 * @param int    $maxWidth  - maximum new width
 	 * @param int    $maxHeight - maximum new height
@@ -13,10 +13,23 @@ class ImageUtils {
 	 * @return string - the path of the new image file, e.g. /target/dir/basename.variation.png (or NULL in case of GD issues)
 	 */
 	public static function createThumbnail($imagePath, $maxWidth, $maxHeight, $targetDir = NULL) {
+		return self::createVariation($imagePath, 'thumbnail', $maxWidth, $maxHeight, $targetDir);
+	}
+
+	/**
+	 * Creates a thumbnail image from the given image at the path.
+	 * @param string $imagepath - path of original image
+	 * @param string $variation - new variation name to be used
+	 * @param int    $maxWidth  - maximum new width
+	 * @param int    $maxHeight - maximum new height
+	 * @param string $targetDir - target directory
+	 * @return string - the path of the new image file, e.g. /target/dir/basename.variation.png (or NULL in case of GD issues)
+	 */
+	public static function createVariation($imagePath, $variation, $maxWidth, $maxHeight, $targetDir = NULL) {
 		if (!file_exists($imagePath)) {
 			$targetPath = NULL;
 		} else {
-			$targetPath = self::getNewPath($imagePath, 'thumbnail', $targetDir);
+			$targetPath = self::getNewPath($imagePath, $variation, $targetDir);
 		}
 
 		if ($targetPath != NULL) {
