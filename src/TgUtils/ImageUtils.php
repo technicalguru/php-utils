@@ -201,7 +201,7 @@ class ImageUtils {
 				$height = $image->getImageHeight();
 				$actions = self::computeCropAndScale($width, $height, $newWidth, $newHeight, $options);
 				if ($actions->scale != 1) {
-					$image->scaleImage($actions->factor * $width, 0);
+					$image->scaleImage($actions->factor * $width, $actions->factor * $height);
 				}
 				if ($image->cropImage($actions->width, $actions->height, $actions->x, $actions->y)) {
 					// Writing it
@@ -246,9 +246,10 @@ class ImageUtils {
 		$rc = new \stdClass;
 		if ($options == NULL) $options = self::cropAndScaleOptions();
 
-
 		// Assume X scaling to maxWidth
-		$rc->factor = $maxWidth / $origWidth;
+		$factorX = $maxWidth  / $origWidth;
+		$factorY = $maxHeight / $origHeight;
+		$rc->factor = $factorX;
 
 		// Positioning for cropping
 		$rc->x = 0;
@@ -260,6 +261,7 @@ class ImageUtils {
 		$rc->options = $options;
 
 		if ($rc->height < $maxHeight) {
+			\TgLog\Log::error('path1');
 			// scale up and crop along X axis
 			$rc->factor = $maxHeight / $origHeight;
 			$rc->width  = $rc->factor * $origWidth;
