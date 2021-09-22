@@ -201,7 +201,8 @@ class ImageUtils {
 				$height = $image->getImageHeight();
 				$actions = self::computeCropAndScale($width, $height, $newWidth, $newHeight, $options);
 				if ($actions->scale != 1) {
-					$image->scaleImage($actions->factor * $width, $actions->factor * $height);
+					$image->scaleImage($actions->factor * $width, $actions->factor * $height, FALSE);
+					$image->setImagePage(0,0,0,0); // This does some trick caused by scaling (canvas issue)
 				}
 				if ($image->cropImage($actions->width, $actions->height, $actions->x, $actions->y)) {
 					// Writing it
@@ -261,7 +262,6 @@ class ImageUtils {
 		$rc->options = $options;
 
 		if ($rc->height < $maxHeight) {
-			\TgLog\Log::error('path1');
 			// scale up and crop along X axis
 			$rc->factor = $maxHeight / $origHeight;
 			$rc->width  = $rc->factor * $origWidth;
