@@ -131,6 +131,46 @@ class Utils {
 	}
 
 	/**
+	  * NULL-safe startsWith test for strings.
+	  * @return boolean TRUE when the test succeeds, FALSE if any argument is NULL or test failed.
+	  */
+	public static function startsWith($haystack, $needle, $ignoreCase = FALSE) {
+		if (($haystack == NULL) || ($needle == NULL)) return FALSE;
+		if ($ignoreCase) {
+			$haystack = mb_strtolower($haystack);
+			$needle   = mb_strtolower($needle);
+		}
+		return mb_strpos($haystack, $needle) === 0;
+	}
+
+	/**
+	  * NULL-safe endsWith test for strings.
+	  * @return boolean TRUE when the test succeeds, FALSE if any argument is NULL or test failed.
+	  */
+	public static function endsWith($haystack, $needle, $ignoreCase = FALSE) {
+		if (($haystack == NULL) || ($needle == NULL)) return FALSE;
+		if ($ignoreCase) {
+			$haystack = mb_strtolower($haystack);
+			$needle   = mb_strtolower($needle);
+		}
+		return mb_strpos($haystack, $needle) == mb_strlen($haystack)-mb_strlen($needle);
+	}
+
+	/**
+	  * NULL-safe contains test for strings.
+	  * @return boolean TRUE when the test succeeds, FALSE if any argument is NULL or test failed.
+	  */
+	public static function contains($haystack, $needle, $ignoreCase = FALSE) {
+		if (($haystack == NULL) || ($needle == NULL)) return FALSE;
+		if ($ignoreCase) {
+			$haystack = mb_strtolower($haystack);
+			$needle   = mb_strtolower($needle);
+		}
+		return mb_strpos($haystack, $needle) !== FALSE;
+	}
+
+	/**
+	/**
 	 * Checks whether an array is associative or not.
 	 * @param array $arr - the array to be tested
 	 * @return boolean TRUE - when array is associative, FALSE otherwise
