@@ -129,26 +129,26 @@ class ImageUtils {
 		$ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
 		switch ($ext) {
 		case 'png':
-			if (!imagepng($thumbnail, $path)) $path = NULL;
+			if (!imagepng($image, $path)) $path = NULL;
 			break;
 		case 'jpg':
 		case 'jpeg':
-			if (!imagejpeg($thumbnail, $path)) $path = NULL;
+			if (!imagejpeg($image, $path)) $path = NULL;
 			break;
 		case 'webp':
-			if (!imagewebp($thumbnail, $path)) $path = NULL;
+			if (!imagewebp($image, $path)) $path = NULL;
 			break;
 		case 'xpm':
-			if (!imagexbm($thumbnail, $path)) $path = NULL;
+			if (!imagexbm($image, $path)) $path = NULL;
 			break;
 		case 'wbmp':
-			if (!imagewbmp($thumbnail, $path)) $path = NULL;
+			if (!imagewbmp($image, $path)) $path = NULL;
 			break;
 		case 'gif':
-			if (!imagegif($thumbnail, $path)) $path = NULL;
+			if (!imagegif($image, $path)) $path = NULL;
 			break;
 		case 'bmp':
-			if (!imagebmp($thumbnail, $path)) $path = NULL;
+			if (!imagebmp($image, $path)) $path = NULL;
 			break;
 		default:
 			$path = NULL;
