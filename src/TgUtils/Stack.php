@@ -39,5 +39,11 @@ class Stack {
 		}
 		return NULL;
 	}
+
+	/** Returns the stack elements with top element first */
+	public function elements($reverse = FALSE) {
+		return $reverse ? array_reverse($this->stack) : $this->stack;
+	}
+
 }
 
