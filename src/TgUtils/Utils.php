@@ -127,7 +127,7 @@ class Utils {
 	 * @return boolean TRUE when string is an email.
 	 */
 	public static function isEmail($s) {
-		return filter_var($s, FILTER_VALIDATE_EMAIL);
+		return is_string(filter_var($s, FILTER_VALIDATE_EMAIL));
 	}
 
 	/**
