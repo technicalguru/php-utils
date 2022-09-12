@@ -415,7 +415,7 @@ class Date extends \DateTime {
 	}
 
 	/** create a local instance from given format */
-	public static function createFromFormat($format, $timeString, $timezone = null):\DateTime|false {
+	public static function createFromFormat($format, $timeString, $timezone = null):\DateTime|bool {
 		if ($timezone == null) {
 			$timezone = new \DateTimeZone(date_default_timezone_get());
 		}
