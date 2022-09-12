@@ -321,7 +321,7 @@ class Request {
 	 */
 	protected function initOriginalPath() {
 		$rc = $this->path;
-		$rootDef = $_SERVER['HTTP_X_FORWARDED_ROOT'];
+		$rootDef = isset($_SERVER['HTTP_X_FORWARDED_ROOT']) ? $_SERVER['HTTP_X_FORWARDED_ROOT'] : '';
 		if ($rootDef) {
 			$arr = explode(',', $rootDef);
 			if (strpos($rc, $arr[0]) === 0) {
@@ -353,7 +353,7 @@ class Request {
 	 */
 	protected function initWebRoot($considerForwarding = TRUE) {
 		if ($considerForwarding) {
-			$rootDef = $_SERVER['HTTP_X_FORWARDED_ROOT'];
+			$rootDef = isset($_SERVER['HTTP_X_FORWARDED_ROOT']) ? $_SERVER['HTTP_X_FORWARDED_ROOT'] : '';
 			if ($rootDef) {
 				$arr = explode(',', $rootDef);
 				$rc = $arr[1];
