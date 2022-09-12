@@ -326,7 +326,7 @@ class Log {
 	 * @return array list of messages registered.
 	 */
 	public static function get() {
-		return $_SESSION['messages'];
+		return isset($_SESSION['messages']) ? $_SESSION['messages'] : array();
 	}
 
 	/**

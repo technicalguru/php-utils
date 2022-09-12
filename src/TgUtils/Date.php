@@ -263,7 +263,7 @@ class Date extends \DateTime {
 	 * @return  string   The date string in the specified format format.
 	 *
 	 */
-	public function format($format, $local = false, $translate = true, $language = null) {
+	public function format($format, $local = false, $translate = true, $language = null):string {
 		if ($translate) {
 			// Do string replacements for date format options that can be translated.
 			$format = preg_replace('/(^|[^\\\])D/', "\\1" . self::DAY_ABBR, $format);
@@ -366,7 +366,7 @@ class Date extends \DateTime {
 	 *
 	 * @note    This method can't be type hinted due to a PHP bug: https://bugs.php.net/bug.php?id=61483
 	 */
-	public function setTimezone($tz) {
+	public function setTimezone($tz):\DateTime {
 		$this->tz = $tz;
 
 		return parent::setTimezone($tz);
@@ -415,7 +415,7 @@ class Date extends \DateTime {
 	}
 
 	/** create a local instance from given format */
-	public static function createFromFormat($format, $timeString, $timezone = null) {
+	public static function createFromFormat($format, $timeString, $timezone = null):\DateTime|false {
 		if ($timezone == null) {
 			$timezone = new \DateTimeZone(date_default_timezone_get());
 		}
