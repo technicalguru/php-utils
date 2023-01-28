@@ -186,13 +186,15 @@ class Request {
 
 	/**
 	 * Returns the GET parameter value from the request.
-	 * @param string $key - the parameter name
-	 * @param mixed $default - the default value to return when parameter does not exist (optional, default is NULL).
+	 * @param string $key     - the parameter name
+	 * @param mixed  $default - the default value to return when parameter does not exist (optional, default is NULL).
+	 * @param object $filter  - a filter to sanitize the value.
 	 * @return mixed the parameter value or its default.
 	 */
-	public function getGetParam($key, $default = NULL) {
+	public function getGetParam($key, $default = NULL, $filter = NULL) {
 		$params = $this->getParams;
-		return isset($params[$key]) ? $params[$key] : $default;
+		if ($filter == NULL) $filter = StringFilters::$NO_HTML;
+		return isset($params[$key]) ? $filter->filter($params[$key]) : $default;
 	}
 
 	/**
@@ -214,13 +216,15 @@ class Request {
 
 	/**
 	 * Returns the POST parameter value from the request.
-	 * @param string $key - the parameter name
-	 * @param mixed $default - the default value to return when parameter does not exist (optional, default is NULL).
+	 * @param string $key     - the parameter name
+	 * @param mixed  $default - the default value to return when parameter does not exist (optional, default is NULL).
+	 * @param object $filter  - a filter to sanitize the value.
 	 * @return mixed the parameter value or its default.
 	 */
-	public function getPostParam($key, $default = NULL) {
+	public function getPostParam($key, $default = NULL, $filter = NULL) {
 		$params = $this->getPostParams();
-		return isset($params[$key]) ? $params[$key] : $default;
+		if ($filter == NULL) $filter = StringFilters::$NO_HTML;
+		return isset($params[$key]) ? $filter->filter($params[$key]) : $default;
 	}
 
 	/**
