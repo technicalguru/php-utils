@@ -1,18 +1,18 @@
 <?php
 
-package TgUtils;
+namespace TgUtils;
 
 /**
  * An interface for filter strings from evil input.
  */
-public interface StringFilter {
+interface StringFilter {
 
 	/**
 	 * Filters the given string and returns sanitized value.
 	 * @param string $s - string to sanitize (can be null)
 	 * @return the sanitized string.
 	 */
-	public filter($s);
+	public function filter($s);
 
 }
 

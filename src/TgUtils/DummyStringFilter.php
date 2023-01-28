@@ -1,15 +1,15 @@
 <?php
 
-package TgUtils;
+namespace TgUtils;
 
 /**
  * An interface for not filtering string at all.
  */
-public class DummyStringFilter implements StringFilter {
+class DummyStringFilter implements StringFilter {
 
-	public static $INSTANCE = new DummyStringFilter();
+	public static $INSTANCE;
 
-	public __construct() {
+	public function __construct() {
 	}
 
 	/**
@@ -17,9 +17,9 @@ public class DummyStringFilter implements StringFilter {
 	 * @param string $s - string to sanitize (can be null)
 	 * @return the sanitized string.
 	 */
-	public filter($s) {
+	public function filter($s) {
 		return $s;
 	}
 
 }
-
+DummyStringFilter::$INSTANCE = new DummyStringFilter();
