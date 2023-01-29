@@ -1,14 +1,18 @@
 <?php
 
-package TgUtils;
+namespace TgUtils;
 
 /**
  * Provides default string filters.
  */
-public class StringFilters {
+class StringFilters {
 
-	public static $DUMMY   = DummyStringFilter::$INSTANCE;
-	public static $NO_HTML = NoHtmlStringFilter::$INSTANCE;
+	public static $DUMMY;
+	public static $NO_HTML;
+	public static $TEXTBOX;
 
 }
+StringFilters::$DUMMY   = DummyStringFilter::$INSTANCE;
+StringFilters::$NO_HTML = NoHtmlStringFilter::$INSTANCE;
+StringFilters::$TEXTBOX = PurifierStringFilter::$INSTANCE;
 
