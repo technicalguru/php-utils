@@ -1,26 +1,21 @@
 <?php
 
-package TgUtils;
+namespace TgUtils;
 
 /**
  * An interface for filter strings from any HTML tags.
  */
-public class NoHtmlStringFilter implements StringFilter {
+class NoHtmlStringFilter extends AbstractStringFilter {
 
-	public static $INSTANCE = new NoHtmlStringFilter();
+	public static $INSTANCE;
 
-	public __construct() {
+	public function __construct() {
+		parent::__construct();
 	}
 
-	/**
-	 * Filters the given string and returns sanitized value.
-	 * @param string $s - string to sanitize (can be null)
-	 * @return the sanitized string.
-	 */
-	public filter($s) {
-		if ($s == NULL) return $s;
+	protected function filterString($s) {
 		return strip_tags($s);
 	}
-
 }
+NoHtmlStringFilter::$INSTANCE = new NoHtmlStringFilter();
 

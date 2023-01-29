@@ -193,7 +193,7 @@ class Request {
 	 */
 	public function getGetParam($key, $default = NULL, $filter = NULL) {
 		$params = $this->getParams;
-		if ($filter == NULL) $filter = StringFilters::$NO_HTML;
+		if ($filter == NULL) $filter = NoHtmlStringFilter::$INSTANCE;
 		return isset($params[$key]) ? $filter->filter($params[$key]) : $default;
 	}
 
@@ -223,7 +223,7 @@ class Request {
 	 */
 	public function getPostParam($key, $default = NULL, $filter = NULL) {
 		$params = $this->getPostParams();
-		if ($filter == NULL) $filter = StringFilters::$NO_HTML;
+		if ($filter == NULL) $filter = NoHtmlStringFilter::$INSTANCE;
 		return isset($params[$key]) ? $filter->filter($params[$key]) : $default;
 	}
 

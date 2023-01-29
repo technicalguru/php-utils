@@ -15,7 +15,8 @@
 	"require" : {
 		"php" : ">=7.0.0",
 		"ext-mbstring" : "*",
-		"technicalguru/i18n" : "~1"
+		"technicalguru/i18n" : "~1",
+        "ezyang/htmlpurifier":"^4.13"
 	},
 	"autoload" : {
 		"psr-4" : {
