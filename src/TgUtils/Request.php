@@ -72,6 +72,16 @@ class Request {
 
 	/** DEPRECATED: The language code for this request (by default: en) */
 	public $langCode;
+	/** Language code */
+	public $language;
+	/** Canonical path */
+	public $canonicalPath;
+	/** Page Path */
+	public $pagePath;
+	/** Page Path elements */
+	public $pagePathElements;
+	/** usage of language path */
+	public $useLanguagePath;
 
 	/** Constructor */
 	public function __construct() {
